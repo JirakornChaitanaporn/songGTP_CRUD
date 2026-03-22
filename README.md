@@ -26,7 +26,7 @@ Windows:
 ```bash
 python -m venv .env
 ```
-3. Activate the Virtual Environment
+## 3. Activate the Virtual Environment
 macOS / Linux:
 ```bash
 source .env/bin/activate
@@ -35,23 +35,23 @@ Windows
 ```bash
 .env\Scripts\activate
 ```
-4. Install Dependencies
+## 4. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
-5. Apply Database Migrations
+## 5. Apply Database Migrations
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
-6. Create a Superuser
+## 6. Create a Superuser
 ```bash
 python manage.py createsuperuser
 ```
 
 Enter your preferred username, email, and password when prompted.
 
-7. Run the Development Server
+## 7. Run the Development Server
 python manage.py runserver
 🌐 Access the Application:
 Main application:
