@@ -63,12 +63,15 @@ Log in using the superuser credentials you created earlier.
 After you login you will be in this pagr
 ![alt text](image.png)
 
+# to CREATE data in table click on the add button then insert data you want then click save on the bottom left
 
 ![alt text](image-4.png)
-to CREATE data in table click on the add button then insert data you want then click save on the bottom left
+# to READ click on the table name: Librarys, Prompts, Songs and Users
+
 ![alt text](image-1.png)
-to READ click on the table name: Librarys, Prompts, Songs and Users
+# to UPDATE click change then choose the row to be edited and enter new information
+
 ![alt text](image-2.png)
-to UPDATE click change then choose the row to be edited and enter new information
+# to DELETE click on the table name: Librarys, Prompts, Songs and Users then click the row that will be deleted then go to bottm right and click delete
+
 ![alt text](image-3.png)
-to DELETE click on the table name: Librarys, Prompts, Songs and Users then click the row that will be deleted then go to bottm right and click delete
