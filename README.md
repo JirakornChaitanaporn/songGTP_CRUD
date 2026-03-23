@@ -59,19 +59,55 @@ http://127.0.0.1:8000/admin/
 
 Log in using the superuser credentials you created earlier.
 
-## 8. Using CRUD in admin site
-After you login you will be in this pagr
-![alt text](image.png)
+## 8. Using CRUD in the Admin Site
 
-# to CREATE data in table click on the add button then insert data you want then click save on the bottom left
+After logging in, you will be redirected to the admin dashboard:
 
-![alt text](image-4.png)
-# to READ click on the table name: Librarys, Prompts, Songs and Users
+![Admin Dashboard](image.png)
 
-![alt text](image-1.png)
-# to UPDATE click change then choose the row to be edited and enter new information
+---
 
-![alt text](image-2.png)
-# to DELETE click on the table name: Librarys, Prompts, Songs and Users then click the row that will be deleted then go to bottm right and click delete
+### ➕ Create Data
+To create new data:
+1. Click the **"Add"** button.
+2. Fill in the required fields.
+3. Click **"Save"** at the bottom.
 
-![alt text](image-3.png)
+![Create Data](image-4.png)
+
+---
+
+### 📖 Read Data
+To view existing data:
+- Click on a table name such as:
+  - **Librarys**
+  - **Prompts**
+  - **Songs**
+  - **Users**
+
+![Read Data](image-1.png)
+
+---
+
+### ✏️ Update Data
+To update existing data:
+1. Click **"Change"**.
+2. Select the row you want to edit.
+3. Modify the information.
+4. Click **"Save"**.
+
+![Update Data](image-2.png)
+
+---
+
+### ❌ Delete Data
+To delete data:
+1. Click on a table name:
+   - **Librarys**
+   - **Prompts**
+   - **Songs**
+   - **Users**
+2. Select the row you want to delete.
+3. Click **"Delete"** at the bottom right.
+
+![Delete Data](image-3.png)
