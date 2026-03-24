@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -54,5 +55,17 @@ def create_user_template(request):
         form = UserForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "User created successfully") # messages = []
+            return redirect("create_user_template")
             
+    # GET
     return render(request, "user/create-user.html")
+
+def search_user_template(request):
+    username = request.GET.get("username")
+    if username == None or username == "":
+        users = User.objects.all()
+    else:
+        users = User.objects.filter(username__contains=username)
+        
+    return render(request, "user/search-user.html", {"users": users} )

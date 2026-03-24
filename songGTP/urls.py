@@ -20,10 +20,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 # Import all view functions
-from user.views import get_user, create_user, update_user, delete_user, create_user_template
-from song.views import get_song, create_song, update_song, delete_song
-from prompt.views import get_prompt, create_prompt, update_prompt, delete_prompt
-from library.views import get_library, create_library, update_library, delete_library
+from user.views import get_user, create_user, update_user, delete_user, create_user_template, search_user_template
+from song.views import get_song, create_song, update_song, delete_song, create_song_template, search_song_template
+from prompt.views import get_prompt, create_prompt, update_prompt, delete_prompt, create_prompt_template, search_prompt_template
+from library.views import get_library, create_library, update_library, delete_library, create_library_template, search_library_template
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -52,5 +52,21 @@ urlpatterns = [
     path('api/libraries/update/<int:pk>/', update_library, name='update_library'),
     path('api/libraries/delete/<int:pk>/', delete_library, name='delete_library'),
     
-    path('create-user/', create_user_template, name="create_user_template")
+    
+    # Alternative CRUD (Template Views)
+    # User
+    path('create-user/', create_user_template, name="create_user_template"),
+    path('search-user/', search_user_template, name="search_user"),
+    # Song
+    path('create-song/', create_song_template, name="create_song_template"),
+    path('search-song/', search_song_template, name="search_song"),
+    # Library
+    path('create-library/', create_library_template, name="create_library_template"),
+    path('search-library/', search_library_template, name="search_library"),
+    # Prompt
+    path('create-prompt/', create_prompt_template, name="create_prompt_template"),
+    path('search-prompt/', search_prompt_template, name="search_prompt"),
+    
+    
 ]
+

@@ -3,6 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Prompt
 from .serializers import PromptSerializer
+from django.shortcuts import render, redirect
+from .forms import PromptForm
+from django.contrib import messages
 
 @api_view(["GET"])
 def get_prompt(request):
@@ -43,3 +46,25 @@ def delete_prompt(request, pk):
     
     prompt.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+def create_prompt_template(request):
+    # check if request from submit form
+    if request.method == "POST":
+        form = PromptForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Prompt created successfully")
+            return redirect("create_prompt_template")
+            
+    # GET
+    return render(request, "prompt/create-prompt.html")
+
+def search_prompt_template(request):
+    song_name = request.GET.get("song_name")
+    if song_name == None or song_name == "":
+        prompts = Prompt.objects.all()
+    else:
+        prompts = Prompt.objects.filter(song_name__contains=song_name)
+        
+    return render(request, "prompt/search-prompt.html", {"prompts": prompts})
+

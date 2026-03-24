@@ -3,6 +3,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Library
 from .serializers import LibrarySerializer, LibrarySerializerSave
+from django.shortcuts import render, redirect
+from .forms import LibraryForm
+from django.contrib import messages
+from user.models import User
 
 # Create your views here.
 @api_view(["GET"])
@@ -44,3 +48,26 @@ def delete_library(request, pk):
     
     library.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+def create_library_template(request):
+    # check if request from submit form
+    if request.method == "POST":
+        form = LibraryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Library created successfully")
+            return redirect("create_library_template")
+            
+    # GET
+    users = User.objects.all()
+    return render(request, "library/create-library.html", {"users": users})
+
+def search_library_template(request):
+    username = request.GET.get("username")
+    if username == None or username == "":
+        libraries = Library.objects.all()
+    else:
+        libraries = Library.objects.filter(user__username__contains=username)
+        
+    return render(request, "library/search-library.html", {"libraries": libraries})
+

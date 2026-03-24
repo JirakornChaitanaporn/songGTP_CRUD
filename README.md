@@ -111,3 +111,49 @@ To delete data:
 3. Click **"Delete"** at the bottom right.
 
 ![Delete Data](image-3.png)
+
+## 8.1 Alternative CREATE & READ (Template Views)
+
+In addition to the Admin site, you can use the **template-based frontend** to create and search data directly in the browser.
+
+### 🔧 Setup
+
+Run the development server as usual:
+
+```bash
+python manage.py runserver
+```
+
+### 🔗 Available Routes
+
+The URL format follows: `http://127.0.0.1:8000/<operation>-<table>/`
+
+| Operation | Table | URL |
+|-----------|-------|-----|
+| **Create** | User | [/create-user/](http://127.0.0.1:8000/create-user/) |
+| **Search** | User | [/search-user/](http://127.0.0.1:8000/search-user/) |
+| **Create** | Song | [/create-song/](http://127.0.0.1:8000/create-song/) |
+| **Search** | Song | [/search-song/](http://127.0.0.1:8000/search-song/) |
+| **Create** | Library | [/create-library/](http://127.0.0.1:8000/create-library/) |
+| **Search** | Library | [/search-library/](http://127.0.0.1:8000/search-library/) |
+| **Create** | Prompt | [/create-prompt/](http://127.0.0.1:8000/create-prompt/) |
+| **Search** | Prompt | [/search-prompt/](http://127.0.0.1:8000/search-prompt/) |
+
+---
+
+### 📝 Create Example
+
+Fill in the form fields and click **"Submit"** to create a new record.
+
+![Create Form Example](image-5.png)
+
+---
+
+### 🔍 Search Example
+
+Use the search bar to filter records by name (e.g. username, song name). Leave it empty to view all records.
+
+![Search Table Example](image-6.png)
+
+> **Note:** For the **Search** pages, you can type a keyword to filter results (e.g. username, song name).  
+> For the **Create** pages, simply fill in the fields and submit the form.

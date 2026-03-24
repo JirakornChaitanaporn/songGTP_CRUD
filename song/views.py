@@ -3,6 +3,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Song
 from .serializers import SongSerializer, SongSerializerSave
+from django.shortcuts import render, redirect
+from .forms import SongForm
+from django.contrib import messages
+from prompt.models import Prompt
+from library.models import Library
 
 # Create your views here.
 @api_view(["GET"])
@@ -44,3 +49,27 @@ def delete_song(request, pk):
     
     song.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+def create_song_template(request):
+    # check if request from submit form
+    if request.method == "POST":
+        form = SongForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Song created successfully")
+            return redirect("create_song_template")
+            
+    # GET
+    prompts = Prompt.objects.all()
+    libraries = Library.objects.all()
+    return render(request, "song/create-song.html", {"prompts": prompts, "libraries": libraries})
+
+def search_song_template(request):
+    song_name = request.GET.get("song_name")
+    if song_name == None or song_name == "":
+        songs = Song.objects.all()
+    else:
+        songs = Song.objects.filter(song_name__contains=song_name)
+        
+    return render(request, "song/search-song.html", {"songs": songs} )
