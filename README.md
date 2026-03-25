@@ -145,7 +145,7 @@ The URL format follows: `http://127.0.0.1:8000/<operation>-<table>/`
 
 Fill in the form fields and click **"Submit"** to create a new record.
 
-![Create Form Example](image-5.png)
+![alt text](image-7.png)
 
 ---
 
@@ -157,3 +157,12 @@ Use the search bar to filter records by name (e.g. username, song name). Leave i
 
 > **Note:** For the **Search** pages, you can type a keyword to filter results (e.g. username, song name).  
 > For the **Create** pages, simply fill in the fields and submit the form.
+
+###  Delete row
+Use the bin icon on the left and click it then click ok
+
+###  Update row
+
+Click on pencil icon and you will be redirect to update page
+Enter all updated information there
+![alt text](image-5.png)
