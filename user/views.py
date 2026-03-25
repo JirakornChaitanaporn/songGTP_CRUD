@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -69,3 +69,33 @@ def search_user_template(request):
         users = User.objects.filter(username__contains=username)
         
     return render(request, "user/search-user.html", {"users": users} )
+
+def delete_user_template(request):
+    pk = request.GET.get("id")
+    try:
+        users = User.objects.get(pk=pk)
+        users.delete()
+        messages.success(request, "User deleted successfully")
+        
+    except User.DoesNotExist:
+        print(f"User id:{pk} does not exist")
+        messages.error(request,"User cannot be deleted because this user does not exist")
+        
+    return redirect("search_user")
+
+def update_user_template(request):
+    pk = request.GET.get("id")
+    old_user = get_object_or_404(User, id=pk)
+    if request.method == "POST":
+        form = UserForm(request.POST, instance=old_user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User updated successfully") # messages = []
+            return redirect("search_user")
+        else:
+            messages.error(request, "User the input information was not complete") # messages = []
+            return redirect("search_user")
+        
+    #GET
+    return render(request, "user/update-user.html", {"user": old_user})
+    

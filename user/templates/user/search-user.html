@@ -6,6 +6,7 @@
         <title>Document</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     </head>
     <body>
         <div class="container-fluid">
@@ -25,6 +26,25 @@
                         </div>
                     </form>
                 </div>
+                {% comment %} message {% endcomment %}
+
+                <div class="offset-3 col-6">
+                    {% if messages %}
+                    <div>
+                        {% for msg in messages %}
+                            {% if msg.tags == "success" %}
+                                <span class = "text-success fw-bold">
+                                    {{ msg }}
+                                </span>
+                            {% else %}
+                                <span class="text-danger fw-bold">
+                                    {{ msg }}
+                                </span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
             </div>
             <div class="row">
                 <div class="offset-2 col-8">
@@ -42,7 +62,12 @@
                         <tbody>
                             {% for user in users %}
                                 <tr>
-                                    <td></td>
+                                    <td>
+                                        <i class="bi bi-trash text-danger fs-4 me-2" style="cursor: pointer;" onClick="clickDelete({{ user.id }})"></i>
+                                        <a href="/update-user/?id={{ user.id }}">
+                                            <i class="bi bi-pencil-fill fs-4"></i>
+                                        </a>
+                                    </td>
                                     <td>{{ user.id }}</td>
                                     <td>{{ user.username }}</td>
                                     <td>{{ user.first_name }}</td>
@@ -56,4 +81,13 @@
             </div>
         </div>
     </body>
+
+    <script>
+        function clickDelete(id){
+            const flag = confirm("Press a button!\nEither OK or Cancel.");
+            if(flag) {
+                window.location.href = "/delete-user/?id="+id
+            }
+        }
+    </script>
 </html>
