@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Prompt
 from .serializers import PromptSerializer
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PromptForm
 from django.contrib import messages
 
@@ -68,3 +68,31 @@ def search_prompt_template(request):
         
     return render(request, "prompt/search-prompt.html", {"prompts": prompts})
 
+def delete_prompt_template(request):
+    pk = request.GET.get("id")
+    try:
+        prompt = Prompt.objects.get(pk=pk)
+        prompt.delete()
+        messages.success(request, "Prompt deleted successfully")
+        
+    except Prompt.DoesNotExist:
+        print(f"Prompt id:{pk} does not exist")
+        messages.error(request, "Prompt cannot be deleted because this prompt does not exist")
+        
+    return redirect("search_prompt")
+
+def update_prompt_template(request):
+    pk = request.GET.get("id")
+    old_prompt = get_object_or_404(Prompt, id=pk)
+    if request.method == "POST":
+        form = PromptForm(request.POST, instance=old_prompt)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Prompt updated successfully")
+            return redirect("search_prompt")
+        else:
+            messages.error(request, "Prompt the input information was not complete")
+            return redirect("search_prompt")
+        
+    #GET
+    return render(request, "prompt/update-prompt.html", {"prompt": old_prompt})

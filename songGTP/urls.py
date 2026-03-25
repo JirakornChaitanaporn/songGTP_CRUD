@@ -21,9 +21,9 @@ from django.conf.urls.static import static
 
 # Import all view functions
 from user.views import get_user, create_user, update_user, delete_user, create_user_template, search_user_template , delete_user_template, update_user_template
-from song.views import get_song, create_song, update_song, delete_song, create_song_template, search_song_template
-from prompt.views import get_prompt, create_prompt, update_prompt, delete_prompt, create_prompt_template, search_prompt_template
-from library.views import get_library, create_library, update_library, delete_library, create_library_template, search_library_template
+from song.views import get_song, create_song, update_song, delete_song, create_song_template, search_song_template, delete_song_template, update_song_template
+from prompt.views import get_prompt, create_prompt, update_prompt, delete_prompt, create_prompt_template, search_prompt_template, delete_prompt_template, update_prompt_template
+from library.views import get_library, create_library, update_library, delete_library, create_library_template, search_library_template, delete_library_template, update_library_template
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -62,12 +62,18 @@ urlpatterns = [
     # Song
     path('create-song/', create_song_template, name="create_song_template"),
     path('search-song/', search_song_template, name="search_song"),
+    path('delete-song/', delete_song_template, name="delete_song_template"),
+    path('update-song/', update_song_template, name="update_song_template"),
     # Library
     path('create-library/', create_library_template, name="create_library_template"),
     path('search-library/', search_library_template, name="search_library"),
+    path('delete-library/', delete_library_template, name="delete_library_template"),
+    path('update-library/', update_library_template, name="update_library_template"),
     # Prompt
     path('create-prompt/', create_prompt_template, name="create_prompt_template"),
     path('search-prompt/', search_prompt_template, name="search_prompt"),
+    path('delete-prompt/', delete_prompt_template, name="delete_prompt_template"),
+    path('update-prompt/', update_prompt_template, name="update_prompt_template"),
     
     
 ]

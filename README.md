@@ -138,6 +138,14 @@ The URL format follows: `http://127.0.0.1:8000/<operation>-<table>/`
 | **Search** | Library | [/search-library/](http://127.0.0.1:8000/search-library/) |
 | **Create** | Prompt | [/create-prompt/](http://127.0.0.1:8000/create-prompt/) |
 | **Search** | Prompt | [/search-prompt/](http://127.0.0.1:8000/search-prompt/) |
+| **Update** | User | [/update-user/](http://127.0.0.1:8000/update-user/) |
+| **Delete** | User | [/delete-user/](http://127.0.0.1:8000/delete-user/) |
+| **Update** | Song | [/update-song/](http://127.0.0.1:8000/update-song/) |
+| **Delete** | Song | [/delete-song/](http://127.0.0.1:8000/delete-song/) |
+| **Update** | Library | [/update-library/](http://127.0.0.1:8000/update-library/) |
+| **Delete** | Library | [/delete-library/](http://127.0.0.1:8000/delete-library/) |
+| **Update** | Prompt | [/update-prompt/](http://127.0.0.1:8000/update-prompt/) |
+| **Delete** | Prompt | [/delete-prompt/](http://127.0.0.1:8000/delete-prompt/) |
 
 ---
 

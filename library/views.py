@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Library
 from .serializers import LibrarySerializer, LibrarySerializerSave
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
 from .forms import LibraryForm
 from django.contrib import messages
 from user.models import User
@@ -71,3 +71,32 @@ def search_library_template(request):
         
     return render(request, "library/search-library.html", {"libraries": libraries})
 
+def delete_library_template(request):
+    pk = request.GET.get("id")
+    try:
+        libraries = Library.objects.get(pk=pk)
+        libraries.delete()
+        messages.success(request, "Library deleted successfully")
+        
+    except Library.DoesNotExist:
+        print(f"Library id:{pk} does not exist")
+        messages.error(request,"Library cannot be deleted because this library does not exist")
+        
+    return redirect("search_library")
+
+def update_library_template(request):
+    pk = request.GET.get("id")
+    old_library = get_object_or_404(Library, id=pk)
+    if request.method == "POST":
+        form = LibraryForm(request.POST, instance=old_library)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Library updated successfully") # messages = []
+            return redirect("search_library")
+        else:
+            messages.error(request, "Library the input information was not complete") # messages = []
+            return redirect("search_library")
+        
+    #GET
+    users = User.objects.all()
+    return render(request, "library/update-library.html", {"library": old_library, "users": users})

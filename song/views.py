@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Song
 from .serializers import SongSerializer, SongSerializerSave
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SongForm
 from django.contrib import messages
 from prompt.models import Prompt
@@ -73,3 +73,34 @@ def search_song_template(request):
         songs = Song.objects.filter(song_name__contains=song_name)
         
     return render(request, "song/search-song.html", {"songs": songs} )
+
+def delete_song_template(request):
+    pk = request.GET.get("id")
+    try:
+        song = Song.objects.get(pk=pk)
+        song.delete()
+        messages.success(request, "Song deleted successfully")
+        
+    except Song.DoesNotExist:
+        print(f"Song id:{pk} does not exist")
+        messages.error(request, "Song cannot be deleted because this song does not exist")
+        
+    return redirect("search_song")
+
+def update_song_template(request):
+    pk = request.GET.get("id")
+    old_song = get_object_or_404(Song, id=pk)
+    if request.method == "POST":
+        form = SongForm(request.POST, instance=old_song)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Song updated successfully")
+            return redirect("search_song")
+        else:
+            messages.error(request, "Song the input information was not complete")
+            return redirect("search_song")
+        
+    #GET
+    prompts = Prompt.objects.all()
+    libraries = Library.objects.all()
+    return render(request, "song/update-song.html", {"song": old_song, "prompts": prompts, "libraries": libraries})
