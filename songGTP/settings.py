@@ -11,10 +11,20 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+#import these 2 to read env
+import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+#write thsee under BASE_DIR first init env then read env
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env')) # /SongGTP/.env
+
+#to call it here (in this case that SUNO_API_KEY is var that we are going to use)
+# suno_key = env("SUNO_API_KEY")
+#to call it outside of setting.py suno_key = os.getenv("SUNO_API_KEY")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/

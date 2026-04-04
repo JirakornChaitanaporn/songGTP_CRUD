@@ -58,7 +58,7 @@
                             <th>Song Name</th>
                             <th>Genre</th>
                             <th>Mood</th>
-                            <th>Base Singer</th>
+                            {% comment %} <th>Base Singer</th> {% endcomment %}
                             <th>Description</th>
                             <th>Lyrics</th>
                             <th>Keywords</th>
@@ -79,7 +79,7 @@
                             <td>{{ prompt.song_name }}</td>
                             <td>{{ prompt.song_genre }}</td>
                             <td>{{ prompt.song_mood }}</td>
-                            <td>{{ prompt.song_base_singer }}</td>
+                            <td>{{ prompt.generation_status }}</td>
                             <td>{{ prompt.description }}</td>
                             <td>{{ prompt.lyrics }}</td>
                             <td>{{ prompt.keywords }}</td>

@@ -4,4 +4,4 @@ from .models import Prompt
 class PromptForm(ModelForm):
     class Meta:
         model = Prompt
-        fields = ["song_name", "song_genre", "song_mood", "song_base_singer", "description", "lyrics","keywords"]
+        fields = ["song_name", "song_genre", "song_mood", "generation_status", "description", "lyrics","keywords"]

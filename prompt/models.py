@@ -16,12 +16,17 @@ class Genre(models.TextChoices):
     SOFT_ROCK = 'soft_rock', 'Soft_rock'
     POP_ROCK = 'pop_rock', 'Pop_rock'
     COUNTRY = 'country', 'Country'
+    
+class Generation(models.TextChoices):
+    GENERATING = 'generating', 'Generating'
+    GENERATED = 'generated', 'Generated'
+    ERROR = 'error', 'Error'
 
 class Prompt(models.Model):
     song_name = models.CharField(max_length=50)
     song_genre = models.CharField(max_length=20, choices=Genre.choices, default=Genre.POP)
     song_mood = models.CharField(max_length=20, choices=Mood.choices, default=Mood.HAPPY)
-    song_base_singer = models.CharField(max_length=50)
+    generation_status = models.CharField(max_length=20, choices=Generation.choices, default=Generation.GENERATING)
     description = models.CharField(max_length=255)
     lyrics = models.TextField(blank= True, null=True)
     keywords = models.TextField(blank= True, null=True)
@@ -33,5 +38,5 @@ class Prompt(models.Model):
         
     def __str__(self):
         return f"Song name: {self.song_name}| Genre: {self.song_genre}| Mood: {self.song_mood}\n \
-        Base singer: {self.song_base_singer}| Description: {self.description}| Lyrics: {self.lyrics}\n \
+        Description: {self.description}| Lyrics: {self.lyrics}\n \
         Keywords: {self.keywords}"

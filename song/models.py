@@ -7,10 +7,10 @@ class Status(models.TextChoices):
     PUBLIC = 'public', 'Public'
     PRIVATE = 'private', 'Private'
 
-class Generation(models.TextChoices):
-    GENERATING = 'generating', 'Generating'
-    GENERATED = 'generated', 'Generated'
-    ERROR = 'error', 'Error'
+# class Generation(models.TextChoices):
+#     GENERATING = 'generating', 'Generating'
+#     GENERATED = 'generated', 'Generated'
+#     ERROR = 'error', 'Error'
 
 class Song(models.Model):
     prompt = models.OneToOneField(Prompt,on_delete=models.CASCADE, related_name="song")
@@ -18,7 +18,7 @@ class Song(models.Model):
     song_name = models.CharField(max_length=50)
     shared_link = models.CharField(max_length=255, blank=True, null=True)
     sharing_status = models.CharField(max_length=20, choices=Status.choices, default=Status.PRIVATE)
-    generation_status = models.CharField(max_length=20, choices=Generation.choices, default=Generation.GENERATING)
+    # generation_status = models.CharField(max_length=20, choices=Generation.choices, default=Generation.GENERATING)
     song_url = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lyrics = models.TextField(blank=True, null=True)

@@ -8,7 +8,7 @@ class SongSerializerSave(serializers.ModelSerializer):
     class Meta:
         model = Song
         fields = ['id', 'prompt', 'library', 'song_name', 'shared_link', 
-                  'sharing_status', 'generation_status', 'song_url', 'created_at']
+                  'sharing_status', 'song_url', 'created_at']
         read_only_fields = ['created_at']
 
 class SongSerializer(serializers.ModelSerializer):
@@ -17,5 +17,5 @@ class SongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
         fields = ['id', 'prompt', 'library', 'song_name', 'shared_link', 
-                  'sharing_status', 'generation_status', 'song_url', 'created_at']
+                  'sharing_status', 'song_url', 'created_at']
         read_only_fields = ['created_at']

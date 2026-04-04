@@ -20,61 +20,52 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 # Import all view functions
-from user.views import get_user, create_user, update_user, delete_user, create_user_template, search_user_template , delete_user_template, update_user_template
-from song.views import get_song, create_song, update_song, delete_song, create_song_template, search_song_template, delete_song_template, update_song_template
-from prompt.views import get_prompt, create_prompt, update_prompt, delete_prompt, create_prompt_template, search_prompt_template, delete_prompt_template, update_prompt_template
-from library.views import get_library, create_library, update_library, delete_library, create_library_template, search_library_template, delete_library_template, update_library_template
+from user.views import UserViewController, CreateUserView, SearchUserView , DeleteUserView
+from song.views import SongViewController, CreateSongView, SearchSongView, DeleteSongView, UpdateSongView
+from prompt.views import PromptViewController, CreatePromptView, SearchPromptView, DeletePromptView, UpdatePromptView
+from library.views import LibraryViewController, CreateLibraryView, SearchLibraryView, DeleteLibraryView, UpdateLibraryView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
     # USER ENDPOINTS
-    path('api/users/', get_user, name='get_user'),
-    path('api/users/create/', create_user, name='create_user'),
-    path('api/users/update/<int:pk>/', update_user, name='update_user'),
-    path('api/users/delete/<int:pk>/', delete_user, name='delete_user'),
+    path('api/users/', UserViewController.as_view()),
+    path('api/users/<int:pk>', UserViewController.as_view()),
     
     # SONG ENDPOINTS
-    path('api/songs/', get_song, name='get_song'),
-    path('api/songs/create/', create_song, name='create_song'),
-    path('api/songs/update/<int:pk>/', update_song, name='update_song'),
-    path('api/songs/delete/<int:pk>/', delete_song, name='delete_song'),
+    path('api/songs/', SongViewController.as_view()),
+    path('api/songs/<int:pk>', SongViewController.as_view()),
     
     # PROMPT ENDPOINTS
-    path('api/prompts/', get_prompt, name='get_prompt'),
-    path('api/prompts/create/', create_prompt, name='create_prompt'),
-    path('api/prompts/update/<int:pk>/', update_prompt, name='update_prompt'),
-    path('api/prompts/delete/<int:pk>/', delete_prompt, name='delete_prompt'),
+    path('api/prompts/', PromptViewController.as_view()),
+    path('api/prompts/<int:pk>', PromptViewController.as_view()),
     
     # LIBRARY ENDPOINTS
-    path('api/libraries/', get_library, name='get_library'),
-    path('api/libraries/create/', create_library, name='create_library'),
-    path('api/libraries/update/<int:pk>/', update_library, name='update_library'),
-    path('api/libraries/delete/<int:pk>/', delete_library, name='delete_library'),
+    path('api/libraries/', LibraryViewController.as_view()),
+    path('api/libraries/<int:pk>', LibraryViewController.as_view()),
     
     
     # Alternative CRUD (Template Views)
     # User
-    path('create-user/', create_user_template, name="create_user_template"),
-    path('search-user/', search_user_template, name="search_user"),
-    path('delete-user/', delete_user_template, name="delete_user_template"),
-    path('update-user/', update_user_template, name = "update_user_template"),
+    path('create-user/', CreateUserView.as_view(), name="create_user_template"),
+    path('search-user/', SearchUserView.as_view(), name="search_user"),
+    path('delete-user/', DeleteUserView.as_view(), name="delete_user_template"),
+    # path('update-user/', UpdateUserView.as_view(), name = "update_user_template"),
     # Song
-    path('create-song/', create_song_template, name="create_song_template"),
-    path('search-song/', search_song_template, name="search_song"),
-    path('delete-song/', delete_song_template, name="delete_song_template"),
-    path('update-song/', update_song_template, name="update_song_template"),
+    path('create-song/', CreateSongView.as_view(), name="create_song_template"),
+    path('search-song/', SearchSongView.as_view(), name="search_song"),
+    path('delete-song/', DeleteSongView.as_view(), name="delete_song_template"),
+    path('update-song/', UpdateSongView.as_view(), name="update_song_template"),
     # Library
-    path('create-library/', create_library_template, name="create_library_template"),
-    path('search-library/', search_library_template, name="search_library"),
-    path('delete-library/', delete_library_template, name="delete_library_template"),
-    path('update-library/', update_library_template, name="update_library_template"),
+    path('create-library/', CreateLibraryView.as_view(), name="create_library_template"),
+    path('search-library/', SearchLibraryView.as_view(), name="search_library"),
+    path('delete-library/', DeleteLibraryView.as_view(), name="delete_library_template"),
+    path('update-library/', UpdateLibraryView.as_view(), name="update_library_template"),
     # Prompt
-    path('create-prompt/', create_prompt_template, name="create_prompt_template"),
-    path('search-prompt/', search_prompt_template, name="search_prompt"),
-    path('delete-prompt/', delete_prompt_template, name="delete_prompt_template"),
-    path('update-prompt/', update_prompt_template, name="update_prompt_template"),
-    
-    
+    path('create-prompt/', CreatePromptView.as_view(), name="create_prompt_template"),
+    path('search-prompt/', SearchPromptView.as_view(), name="search_prompt"),
+    path('delete-prompt/', DeletePromptView.as_view(), name="delete_prompt_template"),
+    path('update-prompt/', UpdatePromptView.as_view(), name="update_prompt_template"),
+
 ]
 
