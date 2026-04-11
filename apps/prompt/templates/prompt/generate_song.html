@@ -1,0 +1,179 @@
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Generate - SongGTP</title>
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+        <link href="{% static 'css/global.css' %}" rel="stylesheet">
+        <link href="{% static 'css/generate_song.css' %}" rel="stylesheet">
+        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    </head>
+    <body class="bg-light">
+        
+        <nav class="navbar py-3 shadow-sm bg-brand">
+            <div class="container d-flex align-items-center justify-content-between">
+                
+                <div class="d-flex align-items-center gap-4">
+                    <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none m-0">
+                        <img src="{% static 'images/logo.png' %}" width="36" height="36" alt="SongGTP Logo">
+                        <span class="text-white fw-bold fs-4">SongGTP</span>
+                    </a>
+                    
+                    <div class="d-flex align-items-center gap-1">
+                        <a href="{% url 'home' %}" class="btn btn-sm text-white opacity-75 d-flex align-items-center gap-2 px-3 hover-opacity">
+                            <i class="bi bi-house"></i> Home
+                        </a>
+                        <a href="#" class="btn btn-sm text-white opacity-75 d-flex align-items-center gap-2 px-3 hover-opacity">
+                            <i class="bi bi-music-note-list"></i> Library
+                        </a>
+                        <a href="#" class="btn btn-sm bg-white text-dark fw-bold rounded px-3 d-flex align-items-center gap-2 shadow-sm">
+                            <i class="bi bi-stars"></i> Generate
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <a href="#" class="btn btn-sm text-white opacity-75 d-flex align-items-center gap-2 px-3 hover-opacity">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </div>
+
+            </div>
+        </nav>
+
+        <main class="py-5">
+            <div class="container">
+                
+                <div class="row mb-4 text-center">
+                    <div class="col-12">
+                        <h1 class="fw-bold mb-2 text-brand">Generate a Song</h1>
+                        <p class="text-secondary m-0">Describe your perfect song and let AI create it for you</p>
+                    </div>
+                </div>
+
+                <div class="row g-4 justify-content-center">
+                    
+                    <div class="col-lg-7">
+                        <div class="card rounded-4 border-light-subtle shadow-sm">
+                            <div class="card-body p-4 p-md-5">
+                                
+                                <div class="d-flex align-items-center gap-2 mb-4">
+                                    <i class="bi bi-stars text-brand fs-5"></i>
+                                    <h5 class="fw-bold m-0 text-dark">Song Details</h5>
+                                </div>
+                                <p class="text-secondary small mb-4">Fill in the details below to generate your custom song</p>
+
+                                <form action="#" method="POST">
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold small text-dark">Song Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control bg-light border-0 py-2 custom-input" placeholder="My Amazing Song" required>
+                                    </div>
+
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold small text-dark">Genre <span class="text-danger">*</span></label>
+                                            <select class="form-select bg-light border-0 py-2 custom-input" required>
+                                                <option selected disabled>Select genre</option>
+                                                <option value="pop">Pop</option>
+                                                <option value="electronic">Electronic</option>
+                                                <option value="rock">Rock</option>
+                                                <option value="jazz">Jazz</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold small text-dark">Mood <span class="text-danger">*</span></label>
+                                            <select class="form-select bg-light border-0 py-2 custom-input" required>
+                                                <option selected disabled>Select mood</option>
+                                                <option value="happy">Happy</option>
+                                                <option value="energetic">Energetic</option>
+                                                <option value="relaxed">Relaxed</option>
+                                                <option value="sad">Sad</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold small text-dark">Description <span class="text-danger">*</span></label>
+                                        <textarea class="form-control bg-light border-0 py-2 custom-input" rows="3" placeholder="Describe your song... e.g., An upbeat pop song about summer adventures with catchy chorus and electronic elements" required></textarea>
+                                        <div class="text-secondary small mt-1">0 characters</div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold small text-dark">Keywords <span class="text-secondary fw-normal">(Optional)</span></label>
+                                        <input type="text" class="form-control bg-light border-0 py-2 custom-input" placeholder="e.g., beach, sunset, adventure, freedom">
+                                        <div class="text-secondary small mt-1">Separate keywords with commas</div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold small text-dark">Lyrics <span class="text-secondary fw-normal">(Optional)</span></label>
+                                        <textarea class="form-control bg-light border-0 py-2 custom-input" rows="3" placeholder="Provide lyrics or let AI generate them for you..."></textarea>
+                                        <div class="text-secondary small mt-1">Leave blank to auto-generate lyrics</div>
+                                    </div>
+
+                                    <button type="submit" class="btn bg-brand text-white w-100 rounded-3 py-2 fw-bold shadow-sm hover-scale d-flex align-items-center justify-content-center gap-2">
+                                        <i class="bi bi-stars"></i> Generate Song
+                                    </button>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        
+                        <div class="card rounded-4 border-0 shadow-sm text-white mb-4 card-tips p-4">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <i class="bi bi-music-note fs-5"></i>
+                                <h6 class="fw-bold m-0">Tips</h6>
+                            </div>
+                            <ul class="m-0 ps-3 small d-flex flex-column gap-3" style="line-height: 1.6;">
+                                <li>Be specific about instruments you want to hear</li>
+                                <li>Describe the tempo (fast, slow, moderate)</li>
+                                <li>Mention any vocal style preferences</li>
+                                <li>Include the emotion you want to convey</li>
+                                <li>Reference similar songs or artists for style</li>
+                            </ul>
+                        </div>
+
+                        <div class="card rounded-4 border-0 shadow-sm text-white card-examples p-4">
+                            <h6 class="fw-bold mb-3">Examples</h6>
+                            
+                            <div class="mb-3">
+                                <p class="fw-bold small mb-1">Electronic Dance:</p>
+                                <p class="small text-white-50 m-0 fst-italic">"High energy EDM with pulsing bass and euphoric synth melodies"</p>
+                            </div>
+                            
+                            <div>
+                                <p class="fw-bold small mb-1">Acoustic Ballad:</p>
+                                <p class="small text-white-50 m-0 fst-italic">"Gentle acoustic guitar with soft vocals, intimate and emotional"</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="py-4 border-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="m-0 small text-secondary text-center">
+                            © 2026 SongGTP. All rights reserved.
+                        </p>
+                        <p class="m-0 mt-1 small text-secondary text-center">
+                            Powered by
+                            <a href="#" class="text-secondary text-decoration-none fw-bold hover-opacity">
+                                Suno API
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </body>
+</html>

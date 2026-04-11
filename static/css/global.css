@@ -1,0 +1,24 @@
+p {
+    margin: 0;
+}
+
+.fs-title {
+    font-size: 2.25rem;
+}
+
+.fs-subtitle {
+    font-size: 1.5rem;
+}
+
+.fs-subtitle-2 {
+    font-size: 1.125rem;
+}
+
+.fs-3xl {
+    font-size: 1.875rem;
+}
+
+.other-section {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}

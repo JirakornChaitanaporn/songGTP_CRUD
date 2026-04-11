@@ -1,0 +1,41 @@
+/* ── Brand Colors ── */
+.bg-brand {
+    background-color: #0f763f !important;
+}
+
+.text-brand {
+    color: #0f763f !important;
+}
+
+.bg-mood {
+    background-color: #0b4393 !important;
+    color: #ffffff !important;
+}
+
+/* ── Custom Hover Interactions ── */
+.song-card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.song-card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+.song-img-zoom {
+    transition: transform 0.3s ease;
+}
+
+.song-card-hover:hover .song-img-zoom {
+    transform: scale(1.03);
+}
+
+/* ── Footer Link ── */
+.footer-link {
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.footer-link:hover {
+    opacity: 1;
+}

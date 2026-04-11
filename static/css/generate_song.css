@@ -1,0 +1,37 @@
+/* ── Brand Colors ── */
+.bg-brand { background-color: #0f763f !important; }
+.text-brand { color: #0f763f !important; }
+
+/* ── Sidebar Cards Custom Colors ── */
+/* The muted green for the Tips card */
+.card-tips {
+    background-color: #2b7549; 
+}
+
+/* The deep blue for the Examples card */
+.card-examples {
+    background-color: #1a4594;
+}
+
+/* ── Input Styling ── */
+/* Gives the form inputs that nice rounded, soft look without overriding bootstrap too heavily */
+.custom-input {
+    border-radius: 8px !important;
+}
+
+/* Ensure select dropdown text matches input text visually */
+select.custom-input {
+    color: #495057;
+}
+
+/* ── Interactive Utilities ── */
+.hover-opacity { transition: opacity 0.2s ease; }
+.hover-opacity:hover { opacity: 0.7; }
+
+.hover-scale { transition: transform 0.1s ease; }
+.hover-scale:hover { transform: scale(1.02); }
+
+/* Remove resize handle from textareas for a cleaner UI */
+textarea {
+    resize: none;
+}

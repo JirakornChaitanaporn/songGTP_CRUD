@@ -20,13 +20,20 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 # Import all view functions
-from user.views import UserViewController, CreateUserView, SearchUserView , DeleteUserView
-from song.views import SongViewController, CreateSongView, SearchSongView, DeleteSongView, UpdateSongView
-from prompt.views import PromptViewController, CreatePromptView, SearchPromptView, DeletePromptView, UpdatePromptView
-from library.views import LibraryViewController, CreateLibraryView, SearchLibraryView, DeleteLibraryView, UpdateLibraryView
+from apps.user.views import UserViewController, CreateUserView, SearchUserView , DeleteUserView , LoginView
+from apps.song.views import SongViewController, CreateSongView, SearchSongView, DeleteSongView, UpdateSongView , SongView
+from apps.prompt.views import PromptViewController, CreatePromptView, SearchPromptView, DeletePromptView, UpdatePromptView, GeneratePromptView
+from apps.library.views import LibraryViewController, CreateLibraryView, SearchLibraryView, DeleteLibraryView, UpdateLibraryView, LibraryView
+from apps.home.views import HomeView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    path('', HomeView.as_view(), name="home"),
+    path('login/', LoginView.as_view(), name="login"),
+    path('library/', LibraryView.as_view(), name="library"),
+    path('song/', SongView.as_view(), name="song"),
+    path('generate_song/', GeneratePromptView.as_view(), name="'generate_song"),
     
     # USER ENDPOINTS
     path('api/users/', UserViewController.as_view()),
