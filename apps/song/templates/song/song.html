@@ -13,30 +13,30 @@
     <body class="bg-light">
         
         <nav class="navbar py-3 shadow-sm bg-brand">
-            <div class="container d-flex align-items-center justify-content-between">
+            <div class="container d-flex justify-content-between">
                 
-                <div class="d-flex align-items-center gap-4">
-                    <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none m-0">
-                        <img src="{% static 'images/logo.png' %}" width="36" height="36" alt="SongGTP Logo">
-                        <span class="text-white fw-bold fs-4">SongGTP</span>
+                <div class="d-flex gap-4">
+                    <a href="{% url 'home' %}" class="navbar-brand text-decoration-none m-0">
+                        <img src="{% static 'images/logo.png' %}" width="36" height="36" alt="SongGTP Logo" class="me-2 align-middle">
+                        <span class="text-white fw-bold fs-4 align-middle">SongGTP</span>
                     </a>
                     
-                    <div class="d-flex align-items-center gap-1">
-                        <a href="{% url 'home' %}" class="btn btn-sm text-white opacity-75 d-flex align-items-center gap-2 px-3">
-                            <i class="bi bi-house"></i> Home
+                    <div class="mt-1">
+                        <a href="{% url 'home' %}" class="btn btn-sm text-white opacity-75 px-3 hover-opacity">
+                            <i class="bi bi-house me-1"></i> Home
                         </a>
-                        <a href="#" class="btn btn-sm bg-white text-dark fw-bold rounded px-3 d-flex align-items-center gap-2 shadow-sm">
-                            <i class="bi bi-music-note-list"></i> Library
+                        <a href="#" class="btn btn-sm bg-white text-dark fw-bold rounded px-3 shadow-sm">
+                            <i class="bi bi-music-note-list me-1"></i> Library
                         </a>
-                        <a href="#" class="btn btn-sm text-white opacity-75 d-flex align-items-center gap-2 px-3">
-                            <i class="bi bi-stars"></i> Generate
+                        <a href="#" class="btn btn-sm text-white opacity-75 px-3 hover-opacity">
+                            <i class="bi bi-stars me-1"></i> Generate
                         </a>
                     </div>
                 </div>
 
                 <div>
-                    <a href="#" class="btn btn-sm text-white opacity-75 d-flex align-items-center gap-2 px-3">
-                        <i class="bi bi-box-arrow-right"></i> Logout
+                    <a href="#" class="btn btn-sm text-white opacity-75 px-3 mt-1 hover-opacity">
+                        <i class="bi bi-box-arrow-right me-1"></i> Logout
                     </a>
                 </div>
 
@@ -62,13 +62,13 @@
                         
                         <div class="row g-3">
                             <div class="col-6">
-                                <button class="btn btn-white border bg-white shadow-sm w-100 rounded-3 py-2 text-dark fw-medium small d-flex align-items-center justify-content-center gap-2 hover-bg-light">
-                                    <i class="bi bi-download"></i> Download
+                                <button class="btn btn-white border bg-white shadow-sm w-100 rounded-3 py-2 text-dark fw-medium small hover-bg-light">
+                                    <i class="bi bi-download me-2"></i> Download
                                 </button>
                             </div>
                             <div class="col-6">
-                                <button class="btn btn-white border bg-white shadow-sm w-100 rounded-3 py-2 text-dark fw-medium small d-flex align-items-center justify-content-center gap-2 hover-bg-light">
-                                    <i class="bi bi-share"></i> Share
+                                <button class="btn btn-white border bg-white shadow-sm w-100 rounded-3 py-2 text-dark fw-medium small hover-bg-light">
+                                    <i class="bi bi-share me-2"></i> Share
                                 </button>
                             </div>
                         </div>
@@ -79,12 +79,12 @@
                         <div class="mb-4">
                             <h1 class="fw-bold mb-1 text-dark">Neon Dreams</h1>
                             <p class="text-secondary mb-3">AI Composer</p>
-                            <div class="d-flex gap-2">
-                                <span class="badge rounded bg-light text-dark border px-2 py-1 fw-medium d-flex align-items-center gap-1">
-                                    <i class="bi bi-music-note text-secondary"></i> Electronic
+                            <div>
+                                <span class="badge rounded bg-light text-dark border px-2 py-1 fw-medium me-1">
+                                    <i class="bi bi-music-note text-secondary me-1"></i> Electronic
                                 </span>
-                                <span class="badge rounded bg-blue px-2 py-1 fw-medium d-flex align-items-center gap-1">
-                                    <i class="bi bi-stars"></i> Energetic
+                                <span class="badge rounded bg-blue px-2 py-1 fw-medium">
+                                    <i class="bi bi-stars me-1"></i> Energetic
                                 </span>
                             </div>
                         </div>
@@ -160,9 +160,9 @@
                         </div>
 
                         <div class="rounded-3 p-3 ai-notice-box">
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                                <i class="bi bi-stars"></i>
-                                <span class="fw-bold small">AI Generated</span>
+                            <div class="mb-1">
+                                <i class="bi bi-stars align-middle me-1"></i>
+                                <span class="fw-bold small align-middle">AI Generated</span>
                             </div>
                             <p class="m-0 small text-opacity-75">
                                 This song was created using advanced AI technology based on your description and preferences.
@@ -175,20 +175,16 @@
         </main>
 
         <footer class="py-4 border-top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <p class="m-0 small text-secondary text-center">
-                            © 2026 SongGTP. All rights reserved.
-                        </p>
-                        <p class="m-0 mt-1 small text-secondary text-center">
-                            Powered by
-                            <a href="#" class="text-secondary text-decoration-none fw-bold hover-opacity">
-                                Suno API
-                            </a>
-                        </p>
-                    </div>
-                </div>
+            <div class="container text-center">
+                <p class="m-0 small text-secondary">
+                    © 2026 SongGTP. All rights reserved.
+                </p>
+                <p class="m-0 mt-1 small text-secondary">
+                    Powered by
+                    <a href="#" class="text-secondary text-decoration-none fw-bold hover-opacity">
+                        Suno API
+                    </a>
+                </p>
             </div>
         </footer>
 

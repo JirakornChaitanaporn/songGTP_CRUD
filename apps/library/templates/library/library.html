@@ -13,30 +13,30 @@
     <body class="bg-light">
         
         <nav class="navbar py-3 shadow-sm bg-brand">
-            <div class="container d-flex align-items-center justify-content-between">
+            <div class="container d-flex justify-content-between">
                 
-                <div class="d-flex align-items-center gap-4">
-                    <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none m-0">
-                        <img src="{% static 'images/logo.png' %}" width="36" height="36" alt="SongGTP Logo">
-                        <span class="text-white fw-bold fs-4">SongGTP</span>
+                <div class="d-flex gap-4">
+                    <a href="{% url 'home' %}" class="navbar-brand text-decoration-none m-0">
+                        <img src="{% static 'images/logo.png' %}" width="36" height="36" alt="SongGTP Logo" class="me-2 align-middle">
+                        <span class="text-white fw-bold fs-4 align-middle">SongGTP</span>
                     </a>
                     
-                    <div class="d-flex align-items-center gap-1">
-                        <a href="{% url 'home' %}" class="btn btn-sm text-white opacity-75 d-flex align-items-center gap-2 px-3">
-                            <i class="bi bi-house"></i> Home
+                    <div class="mt-1">
+                        <a href="{% url 'home' %}" class="btn btn-sm text-white opacity-75 px-3 hover-opacity">
+                            <i class="bi bi-house me-1"></i> Home
                         </a>
-                        <a href="#" class="btn btn-sm bg-white text-dark fw-bold rounded px-3 d-flex align-items-center gap-2 shadow-sm">
-                            <i class="bi bi-music-note-list"></i> Library
+                        <a href="#" class="btn btn-sm bg-white text-dark fw-bold rounded px-3 shadow-sm">
+                            <i class="bi bi-music-note-list me-1"></i> Library
                         </a>
-                        <a href="#" class="btn btn-sm text-white opacity-75 d-flex align-items-center gap-2 px-3">
-                            <i class="bi bi-stars"></i> Generate
+                        <a href="#" class="btn btn-sm text-white opacity-75 px-3 hover-opacity">
+                            <i class="bi bi-stars me-1"></i> Generate
                         </a>
                     </div>
                 </div>
 
                 <div>
-                    <a href="#" class="btn btn-sm text-white opacity-75 d-flex align-items-center gap-2 px-3">
-                        <i class="bi bi-box-arrow-right"></i> Logout
+                    <a href="#" class="btn btn-sm text-white opacity-75 px-3 mt-1 hover-opacity">
+                        <i class="bi bi-box-arrow-right me-1"></i> Logout
                     </a>
                 </div>
 

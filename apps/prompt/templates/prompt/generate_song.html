@@ -15,28 +15,28 @@
         <nav class="navbar py-3 shadow-sm bg-brand">
             <div class="container d-flex align-items-center justify-content-between">
                 
-                <div class="d-flex align-items-center gap-4">
-                    <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none m-0">
-                        <img src="{% static 'images/logo.png' %}" width="36" height="36" alt="SongGTP Logo">
-                        <span class="text-white fw-bold fs-4">SongGTP</span>
+                <div class="d-flex gap-4">
+                    <a href="{% url 'home' %}" class="navbar-brand text-decoration-none m-0">
+                        <img src="{% static 'images/logo.png' %}" width="36" height="36" alt="SongGTP Logo" class="me-2 align-middle">
+                        <span class="text-white fw-bold fs-4 align-middle">SongGTP</span>
                     </a>
                     
-                    <div class="d-flex align-items-center gap-1">
-                        <a href="{% url 'home' %}" class="btn btn-sm text-white opacity-75 d-flex align-items-center gap-2 px-3 hover-opacity">
-                            <i class="bi bi-house"></i> Home
+                    <div class="mt-1">
+                        <a href="{% url 'home' %}" class="btn btn-sm text-white opacity-75 px-3 hover-opacity">
+                            <i class="bi bi-house me-1"></i> Home
                         </a>
-                        <a href="#" class="btn btn-sm text-white opacity-75 d-flex align-items-center gap-2 px-3 hover-opacity">
-                            <i class="bi bi-music-note-list"></i> Library
+                        <a href="#" class="btn btn-sm text-white opacity-75 px-3 hover-opacity">
+                            <i class="bi bi-music-note-list me-1"></i> Library
                         </a>
-                        <a href="#" class="btn btn-sm bg-white text-dark fw-bold rounded px-3 d-flex align-items-center gap-2 shadow-sm">
-                            <i class="bi bi-stars"></i> Generate
+                        <a href="#" class="btn btn-sm bg-white text-dark fw-bold rounded px-3 shadow-sm">
+                            <i class="bi bi-stars me-1"></i> Generate
                         </a>
                     </div>
                 </div>
 
                 <div>
-                    <a href="#" class="btn btn-sm text-white opacity-75 d-flex align-items-center gap-2 px-3 hover-opacity">
-                        <i class="bi bi-box-arrow-right"></i> Logout
+                    <a href="#" class="btn btn-sm text-white opacity-75 px-3 mt-1 hover-opacity">
+                        <i class="bi bi-box-arrow-right me-1"></i> Logout
                     </a>
                 </div>
 
@@ -59,10 +59,9 @@
                         <div class="card rounded-4 border-light-subtle shadow-sm">
                             <div class="card-body p-4 p-md-5">
                                 
-                                <div class="d-flex align-items-center gap-2 mb-4">
-                                    <i class="bi bi-stars text-brand fs-5"></i>
-                                    <h5 class="fw-bold m-0 text-dark">Song Details</h5>
-                                </div>
+                                <h5 class="fw-bold mb-1 text-dark">
+                                    <i class="bi bi-stars text-brand me-2 fs-5"></i>Song Details
+                                </h5>
                                 <p class="text-secondary small mb-4">Fill in the details below to generate your custom song</p>
 
                                 <form action="#" method="POST">
@@ -113,8 +112,8 @@
                                         <div class="text-secondary small mt-1">Leave blank to auto-generate lyrics</div>
                                     </div>
 
-                                    <button type="submit" class="btn bg-brand text-white w-100 rounded-3 py-2 fw-bold shadow-sm hover-scale d-flex align-items-center justify-content-center gap-2">
-                                        <i class="bi bi-stars"></i> Generate Song
+                                    <button type="submit" class="btn bg-brand text-white w-100 rounded-3 py-2 fw-bold shadow-sm hover-scale">
+                                        <i class="bi bi-stars me-2"></i> Generate Song
                                     </button>
 
                                 </form>
@@ -125,10 +124,9 @@
                     <div class="col-lg-4">
                         
                         <div class="card rounded-4 border-0 shadow-sm text-white mb-4 card-tips p-4">
-                            <div class="d-flex align-items-center gap-2 mb-3">
-                                <i class="bi bi-music-note fs-5"></i>
-                                <h6 class="fw-bold m-0">Tips</h6>
-                            </div>
+                            <h6 class="fw-bold mb-3">
+                                <i class="bi bi-music-note me-2 fs-5"></i>Tips
+                            </h6>
                             <ul class="m-0 ps-3 small d-flex flex-column gap-3" style="line-height: 1.6;">
                                 <li>Be specific about instruments you want to hear</li>
                                 <li>Describe the tempo (fast, slow, moderate)</li>
@@ -158,20 +156,16 @@
         </main>
 
         <footer class="py-4 border-top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <p class="m-0 small text-secondary text-center">
-                            © 2026 SongGTP. All rights reserved.
-                        </p>
-                        <p class="m-0 mt-1 small text-secondary text-center">
-                            Powered by
-                            <a href="#" class="text-secondary text-decoration-none fw-bold hover-opacity">
-                                Suno API
-                            </a>
-                        </p>
-                    </div>
-                </div>
+            <div class="container text-center">
+                <p class="m-0 small text-secondary">
+                    © 2026 SongGTP. All rights reserved.
+                </p>
+                <p class="m-0 mt-1 small text-secondary">
+                    Powered by
+                    <a href="#" class="text-secondary text-decoration-none fw-bold hover-opacity">
+                        Suno API
+                    </a>
+                </p>
             </div>
         </footer>
 
