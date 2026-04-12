@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 # Import all view functions
 from apps.user.views import UserViewController, CreateUserView, SearchUserView , DeleteUserView , LoginView
 from apps.song.views import SongViewController, CreateSongView, SearchSongView, DeleteSongView, UpdateSongView , SongView
-from apps.prompt.views import PromptViewController, CreatePromptView, SearchPromptView, DeletePromptView, UpdatePromptView, GeneratePromptView
+from apps.prompt.views import PromptViewController, CreatePromptView, SearchPromptView, DeletePromptView, UpdatePromptView, GenerateSongView
 from apps.library.views import LibraryViewController, CreateLibraryView, SearchLibraryView, DeleteLibraryView, UpdateLibraryView, LibraryView
 from apps.home.views import HomeView
 
@@ -33,7 +33,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name="login"),
     path('library/', LibraryView.as_view(), name="library"),
     path('song/', SongView.as_view(), name="song"),
-    path('generate_song/', GeneratePromptView.as_view(), name="'generate_song"),
+    path('generate_song/', GenerateSongView.as_view(), name="generate_song"),
     
     # USER ENDPOINTS
     path('api/users/', UserViewController.as_view()),

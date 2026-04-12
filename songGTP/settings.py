@@ -35,7 +35,11 @@ SECRET_KEY = 'django-insecure-_e5u9*s*)%f1^@@na$xa@9r(vv+v0j=_@k4in@x%m#h^en*5!7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'calibrate-spinning-handstand.ngrok-free.dev'
+]
 
 
 # Application definition
@@ -139,3 +143,7 @@ STATICFILES_DIRS = [
 
 # Custom User Model
 AUTH_USER_MODEL = 'user.User'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://calibrate-spinning-handstand.ngrok-free.dev',
+]

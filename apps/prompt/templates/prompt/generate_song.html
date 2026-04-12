@@ -25,17 +25,17 @@
                         <a href="{% url 'home' %}" class="btn btn-sm text-white opacity-75 px-3 hover-opacity">
                             <i class="bi bi-house me-1"></i> Home
                         </a>
-                        <a href="#" class="btn btn-sm text-white opacity-75 px-3 hover-opacity">
+                        <a href="{% url 'library' %}" class="btn btn-sm text-white opacity-75 px-3 hover-opacity">
                             <i class="bi bi-music-note-list me-1"></i> Library
                         </a>
-                        <a href="#" class="btn btn-sm bg-white text-dark fw-bold rounded px-3 shadow-sm">
+                        <a href="{% url 'generate_song' %}" class="btn btn-sm bg-white text-dark fw-bold rounded px-3 shadow-sm">
                             <i class="bi bi-stars me-1"></i> Generate
                         </a>
                     </div>
                 </div>
 
                 <div>
-                    <a href="#" class="btn btn-sm text-white opacity-75 px-3 mt-1 hover-opacity">
+                    <a href="{% url 'login' %}" class="btn btn-sm text-white opacity-75 px-3 mt-1 hover-opacity">
                         <i class="bi bi-box-arrow-right me-1"></i> Logout
                     </a>
                 </div>
@@ -64,51 +64,68 @@
                                 </h5>
                                 <p class="text-secondary small mb-4">Fill in the details below to generate your custom song</p>
 
-                                <form action="#" method="POST">
+                                {% if messages %}
+                                <div class="mb-4">
+                                    {% for message in messages %}
+                                        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                                            {{ message }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <form action="{% url 'generate_song' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="generation_status" value="generating">
                                     
                                     <div class="mb-4">
                                         <label class="form-label fw-bold small text-dark">Song Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control bg-light border-0 py-2 custom-input" placeholder="My Amazing Song" required>
+                                        <input type="text" name="song_name" class="form-control bg-light border-0 py-2 custom-input" placeholder="My Amazing Song" required>
                                     </div>
 
                                     <div class="row g-3 mb-4">
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold small text-dark">Genre <span class="text-danger">*</span></label>
-                                            <select class="form-select bg-light border-0 py-2 custom-input" required>
+                                            <select name="song_genre" class="form-select bg-light border-0 py-2 custom-input" required>
                                                 <option selected disabled>Select genre</option>
                                                 <option value="pop">Pop</option>
-                                                <option value="electronic">Electronic</option>
                                                 <option value="rock">Rock</option>
-                                                <option value="jazz">Jazz</option>
+                                                <option value="heavy_metal">Heavy Metal</option>
+                                                <option value="soft_rock">Soft Rock</option>
+                                                <option value="pop_rock">Pop Rock</option>
+                                                <option value="country">Country</option>
                                             </select>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold small text-dark">Mood <span class="text-danger">*</span></label>
-                                            <select class="form-select bg-light border-0 py-2 custom-input" required>
+                                            <select name="song_mood" class="form-select bg-light border-0 py-2 custom-input" required>
                                                 <option selected disabled>Select mood</option>
                                                 <option value="happy">Happy</option>
-                                                <option value="energetic">Energetic</option>
-                                                <option value="relaxed">Relaxed</option>
                                                 <option value="sad">Sad</option>
+                                                <option value="romantic">Romantic</option>
+                                                <option value="angry">Angry</option>
+                                                <option value="energetic">Energetic</option>
+                                                <option value="calm">Calm</option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="mb-4">
                                         <label class="form-label fw-bold small text-dark">Description <span class="text-danger">*</span></label>
-                                        <textarea class="form-control bg-light border-0 py-2 custom-input" rows="3" placeholder="Describe your song... e.g., An upbeat pop song about summer adventures with catchy chorus and electronic elements" required></textarea>
+                                        <textarea name="description" class="form-control bg-light border-0 py-2 custom-input" rows="3" placeholder="Describe your song... e.g., An upbeat pop song about summer adventures with catchy chorus and electronic elements" required></textarea>
                                         <div class="text-secondary small mt-1">0 characters</div>
                                     </div>
 
                                     <div class="mb-4">
                                         <label class="form-label fw-bold small text-dark">Keywords <span class="text-secondary fw-normal">(Optional)</span></label>
-                                        <input type="text" class="form-control bg-light border-0 py-2 custom-input" placeholder="e.g., beach, sunset, adventure, freedom">
+                                        <input type="text" name="keywords" class="form-control bg-light border-0 py-2 custom-input" placeholder="e.g., beach, sunset, adventure, freedom">
                                         <div class="text-secondary small mt-1">Separate keywords with commas</div>
                                     </div>
 
                                     <div class="mb-4">
                                         <label class="form-label fw-bold small text-dark">Lyrics <span class="text-secondary fw-normal">(Optional)</span></label>
-                                        <textarea class="form-control bg-light border-0 py-2 custom-input" rows="3" placeholder="Provide lyrics or let AI generate them for you..."></textarea>
+                                        <textarea name="lyrics" class="form-control bg-light border-0 py-2 custom-input" rows="3" placeholder="Provide lyrics or let AI generate them for you..."></textarea>
                                         <div class="text-secondary small mt-1">Leave blank to auto-generate lyrics</div>
                                     </div>
 
@@ -128,28 +145,13 @@
                                 <i class="bi bi-music-note me-2 fs-5"></i>Tips
                             </h6>
                             <ul class="m-0 ps-3 small d-flex flex-column gap-3" style="line-height: 1.6;">
-                                <li>Be specific about instruments you want to hear</li>
-                                <li>Describe the tempo (fast, slow, moderate)</li>
-                                <li>Mention any vocal style preferences</li>
+                                <li>Be Specific: Combine genres and moods (e.g., "Energetic Synth-pop").</li>
+                                <li>Vocal Style: Describe the voice (e.g., "Soft female vocals" or "Gritty male rap")</li>
+                                <li>Use Tags: Organize lyrics with [Verse], [Chorus], and [Bridge]</li>
                                 <li>Include the emotion you want to convey</li>
-                                <li>Reference similar songs or artists for style</li>
+                                <li>Set the Tempo: Use keywords like "Fast-paced" or "Chill/Slow" for the right flow.</li>
                             </ul>
                         </div>
-
-                        <div class="card rounded-4 border-0 shadow-sm text-white card-examples p-4">
-                            <h6 class="fw-bold mb-3">Examples</h6>
-                            
-                            <div class="mb-3">
-                                <p class="fw-bold small mb-1">Electronic Dance:</p>
-                                <p class="small text-white-50 m-0 fst-italic">"High energy EDM with pulsing bass and euphoric synth melodies"</p>
-                            </div>
-                            
-                            <div>
-                                <p class="fw-bold small mb-1">Acoustic Ballad:</p>
-                                <p class="small text-white-50 m-0 fst-italic">"Gentle acoustic guitar with soft vocals, intimate and emotional"</p>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
