@@ -15,6 +15,7 @@ class Status(models.TextChoices):
 class Song(models.Model):
     prompt = models.OneToOneField(Prompt,on_delete=models.CASCADE, related_name="song")
     library = models.ForeignKey(Library,on_delete=models.CASCADE, related_name="song")
+    image_link = models.CharField(max_length=255)
     song_name = models.CharField(max_length=50)
     shared_link = models.CharField(max_length=255, blank=True, null=True)
     sharing_status = models.CharField(max_length=20, choices=Status.choices, default=Status.PRIVATE)
@@ -22,6 +23,7 @@ class Song(models.Model):
     song_url = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lyrics = models.TextField(blank=True, null=True)
+    length = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:

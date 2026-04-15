@@ -1,0 +1,16 @@
+{% load static %}
+<a href="#" class="text-decoration-none">
+    <div class="card rounded-4 border-light-subtle h-100 overflow-hidden song-card-hover">
+        <div style="height: 200px;" class="overflow-hidden">
+            <img src="{{image_link}}" class="w-100 h-100 object-fit-cover song-img-zoom">
+        </div>
+        <div class="card-body p-4">
+            <h5 class="fw-bold mb-1 text-dark">{{song_name}}</h5>
+            <p class="text-secondary mb-3 small">AI Composer suno api {{length}}</p>
+            <div class="d-flex gap-2">
+                <span class="badge rounded bg-light text-dark border px-2 py-1 fw-medium">{{song_genre}}</span>
+                <span class="badge rounded bg-mood px-2 py-1 fw-medium">{{song_mood}}</span>
+            </div>
+        </div>
+    </div>
+</a>

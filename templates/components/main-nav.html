@@ -1,0 +1,36 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg shadow-sm bg-brand">
+    <div class="container d-flex justify-content-between">
+        
+        <a href="{% url 'home' %}" class="navbar-brand text-decoration-none m-0">
+            <img src="{% static 'images/logo.png' %}" width="36" height="36" alt="SongGTP Logo" class="me-2 align-middle">
+            <span class="text-white fw-bold fs-xl align-middle">SongGTP</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-4">
+                <li class="nav-item mx-1">
+                    <a href="{% url 'home' %}" class="nav-link px-3 {% if page == 'home' %} active {% endif %}">
+                        <i class="bi bi-house me-1"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item mx-1">
+                    <a href="{% url 'library' %}" class="nav-link px-3 {% if page == 'library' or page == 'song'%} active {% endif %}">
+                        <i class="bi bi-list me-1"></i>Library
+                    </a>
+                </li>
+                <li class="nav-item mx-1">
+                    <a href="{% url 'generate_song' %}" class="nav-link px-3 {% if page == 'generate_song'  %} active {% endif %}">
+                        <i class="bi bi-stars me-1"></i> Generate
+                    </a>
+                </li>
+            </ul>
+            <a href="#" class="nav-link px-2 mt-1">
+                <i class="bi bi-box-arrow-right me-1"></i> Logout
+            </a>
+        </div>
+    </div>
+</nav>

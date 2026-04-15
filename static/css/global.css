@@ -14,6 +14,10 @@ p {
     font-size: 1.125rem;
 }
 
+.fs-xl {
+    font-size: 1.25rem;
+}
+
 .fs-3xl {
     font-size: 1.875rem;
 }
@@ -22,3 +26,31 @@ p {
     padding-top: 5rem;
     padding-bottom: 5rem;
 }
+
+/* ── Brand Colors ── */
+.bg-brand {
+    background-color: #0f763f;
+}
+
+.text-brand {
+    color: #0f763f;
+}
+
+.bg-mood {
+    background-color: #0b4393;
+    color: #ffffff;
+}
+
+/* navbar */
+
+.navbar-nav a.nav-link,  a.nav-link{
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 0.6rem;
+}
+
+.navbar-nav a.nav-link.active  {
+    background-color: #fff;
+    color: #0f763f;
+} 
