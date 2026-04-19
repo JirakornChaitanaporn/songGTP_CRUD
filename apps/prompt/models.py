@@ -18,15 +18,19 @@ class Genre(models.TextChoices):
     COUNTRY = 'country', 'Country'
     
 class Generation(models.TextChoices):
-    GENERATING = 'generating', 'Generating'
-    GENERATED = 'generated', 'Generated'
-    ERROR = 'error', 'Error'
+    PENDING = 'PENDING', 'Pending'
+    TEXT_SUCCESS = 'TEXT_SUCCESS', 'Text Success'   # Lyrics/Metadata generated
+    FIRST_SUCCESS = 'FIRST_SUCCESS', 'First Success' # First clip of the pair ready
+    SUCCESS = 'SUCCESS', 'Success'                   # Everything finished
+    ERROR = 'ERROR', 'Error'
+    
 
 class Prompt(models.Model):
+    task_id = models.CharField(max_length=255, null=True, blank=True)
     song_name = models.CharField(max_length=50)
     song_genre = models.CharField(max_length=20, choices=Genre.choices, default=Genre.POP)
     song_mood = models.CharField(max_length=20, choices=Mood.choices, default=Mood.HAPPY)
-    generation_status = models.CharField(max_length=20, choices=Generation.choices, default=Generation.GENERATING)
+    generation_status = models.CharField(max_length=20, choices=Generation.choices, default=Generation.PENDING)
     description = models.CharField(max_length=255)
     lyrics = models.TextField(blank= True, null=True)
     keywords = models.TextField(blank= True, null=True)

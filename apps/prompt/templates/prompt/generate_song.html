@@ -25,9 +25,28 @@
                     <div class="card rounded-4 border-light-subtle shadow-sm">
                         <div class="card-body p-4 p-md-5">
                             
-                            <h5 class="fw-bold mb-1 text-dark">
-                                <i class="bi bi-stars text-brand me-2 fs-5"></i>Song Details
-                            </h5>
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5 class="fw-bold mb-1 text-dark">
+                                        <i class="bi bi-stars text-brand me-2 fs-5"></i>Song Details
+                                    </h5>
+                                </div>
+                                <div class="col-6 text-end">
+                                    {% if '/generate_song/' in request.path  %}
+                                        <a href="/create-prompt-mockup/">
+                                            <button class="btn btn-success">
+                                                To mock
+                                            </button>
+                                        </a>
+                                    {% else %}
+                                        <a href="/generate_song/">
+                                            <button class="btn btn-success">
+                                                To real AI
+                                            </button>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
                             <p class="text-secondary small mb-4">Fill in the details below to generate your custom song</p>
 
                             {% if messages %}
@@ -41,7 +60,7 @@
                             </div>
                             {% endif %}
 
-                            <form action="{% url 'generate_song' %}" method="POST">
+                            <form method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="generation_status" value="generating">
                                 
@@ -116,25 +135,15 @@
                             <li>Use Tags: Organize lyrics with [Verse], [Chorus], and [Bridge]</li>
                             <li>Include the emotion you want to convey</li>
                             <li>Set the Tempo: Use keywords like "Fast-paced" or "Chill/Slow" for the right flow.</li>
+                            <li>Set the Tempo: Use keywords like "Fast-paced" or "Chill/Slow" for the right flow.</li>
                         </ul>
                     </div>
+
+
                 </div>
             </div>
         </div>
     </main>
 
         {% include "components/footer.html"%}
-        {% comment %} <footer class="py-4 border-top">
-            <div class="container text-center">
-                <p class="m-0 small text-secondary">
-                    © 2026 SongGTP. All rights reserved.
-                </p>
-                <p class="m-0 mt-1 small text-secondary">
-                    Powered by
-                    <a href="#" class="text-secondary text-decoration-none fw-bold hover-opacity">
-                        Suno API
-                    </a>
-                </p>
-            </div>
-        </footer> {% endcomment %}
 {% endblock %}

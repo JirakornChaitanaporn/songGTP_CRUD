@@ -1,6 +1,9 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
+from django.contrib.auth import logout as auth_logout
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -47,15 +50,20 @@ class UserViewController(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 #need to create library at the same time
-class CreateUserView(CreateView):
+class CreateUserView(View):
+    """Handle user sign-up with traditional form"""
     def get(self, request):
         return render(request, "user/create-user.html")
+    
     def post(self, request):
         form = UserForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "User created successfully") # messages = []
-            return redirect("create_user_template")
+            messages.success(request, "User created successfully")
+            return redirect("sign_in")
+        else:
+            messages.error(request, "Error creating user. Please check your information.")
+            return render(request, "user/create-user.html", {"form": form})
 
 class SearchUserView(ListView):
     def get(self, request):
@@ -81,10 +89,41 @@ class DeleteUserView(DeleteView):
             
         return redirect("search_user")
     
-class LoginView(View):
+class UseLoginView(View):
+    """Handle user sign-in (login) with Google OAuth and traditional login"""
     def get(self, request):
         return render(request, "user/sign-in.html")
     
+    def post(self, request):
+        # Handle traditional login if form is submitted
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        if username and password:
+            from django.contrib.auth import authenticate, login
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, f"Welcome back, {user.username}!")
+                return redirect("home")
+            else:
+                messages.error(request, "Invalid username or password")
+        
+        return render(request, "user/sign-in.html")
+
+
+class LogoutView(View):
+    """Handle user logout"""
+    def get(self, request):
+        auth_logout(request)
+        messages.success(request, "You have been logged out successfully")
+        return redirect("sign_in")
+    
+    def post(self, request):
+        auth_logout(request)
+        messages.success(request, "You have been logged out successfully")
+        return redirect("sign_in")
+
 
 # class UpdateUserView(UpdateView):
 #     def get(self, request):

@@ -1,12 +1,12 @@
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Song
+from .models import Song, Status
 from .serializers import SongSerializer, SongSerializerSave
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SongForm
 from django.contrib import messages
-from apps.prompt.models import Prompt
+from apps.prompt.models import Prompt, Generation
 from apps.library.models import Library
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, View
 

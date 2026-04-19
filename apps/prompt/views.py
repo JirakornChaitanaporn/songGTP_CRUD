@@ -1,7 +1,10 @@
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Prompt
+from .models import Prompt, Generation
+from apps.song.models import Song
+from apps.song.models import Status
+from apps.song.serializers import SongSerializerSave
 from .serializers import PromptSerializer
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PromptForm
@@ -9,6 +12,8 @@ from django.views.generic import ListView, CreateView, DeleteView, UpdateView, V
 from django.contrib import messages
 import os
 import requests as req
+from random import randint
+
 # from strategy import MockSongGeneratorStrategy, SunoSongGeneratorStrategy
 
 # Create your views here.
@@ -47,6 +52,46 @@ class PromptViewController(APIView):
         
         prompt.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class SunoStatusViewController(APIView):
+    def get(self, request, tid, lid):
+        suno_key = os.getenv("SUNO_API_KEY")
+        resp = req.get(f"https://api.sunoapi.org/api/v1/generate/record-info?taskId={tid}", headers={"Authorization": f"Bearer {suno_key}"})
+        json = resp.json()
+        if json["code"] == 200:
+            # update prompt
+            try:
+                lastest_prompt = Prompt.objects.filter(task_id=tid)
+                if json["data"]["status"] == "SUCCESS":
+                    prompt_serializer = PromptSerializer(lastest_prompt[0], data={"generation_status": Generation.SUCCESS}, partial=True)
+                    if prompt_serializer.is_valid():
+                        saved_prompt = prompt_serializer.save()
+                        song_serializer = SongSerializerSave(data = {
+                            "prompt": saved_prompt.id,
+                            "library": lid,
+                            "song_name": json["data"]["response"]["sunoData"][0]["title"],
+                            "song_url": json["data"]["response"]["sunoData"][0]["audioUrl"],
+                            "shared_link": f"localhost:8000/song/1",
+                            "sharing_status": Status.PRIVATE,
+                            "description": saved_prompt.description,
+                            "lyrics": saved_prompt.lyrics,
+                            "length": json["data"]["response"]["sunoData"][0]["duration"]
+                        })
+                        if song_serializer.is_valid():
+                            print("valid again")
+                            song_serializer.save()
+                        else:
+                            print(song_serializer.errors)
+            except Prompt.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            
+            
+            return Response(json, status=status.HTTP_200_OK)
+        else:
+            return Response(json, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+
 
 class CreatePromptView(CreateView):
     def get(self, request):
@@ -98,6 +143,35 @@ class CreatePromptView(CreateView):
                 messages.error(request, "Generating error") # messages = []
                 return redirect("create_prompt_template")
 
+class CreatePromptMockupView(CreateView):
+    def get(self, request, lid):
+        return render(request, "prompt/generate_song.html")
+    
+    def post(self, request, lid):
+        form = PromptForm(request.POST)
+        if form.is_valid():
+            form.cleaned_data["task_id"] = "mock" + str(randint(1,69))
+            form.cleaned_data["generation_status"] = "generating"
+            form.save()
+            messages.success(request, "Prompt created successfully") # messages = []
+            song = Song.objects.create(
+                prompt = form.cleaned_data["id"],
+                library = lid,
+                song_name=form.cleaned_data["song_name"],
+                image_link="https://example.com/rickroll-image.jpg",
+                song_url="https://raw.githubusercontent.com/karimodm/rubber-pranks/master/rickroll.mp3",
+                shared_link="localhost:8000/id",
+                sharing_status=Status.PRIVATE,
+                description="Get rickrolled",
+                lyrics="There no stranger to loves you know the rule and so do I",
+                length="3.30"
+            )
+            return redirect("create_prompt_mockup")
+        else:
+            messages.error(request, "Generating error") # messages = []
+            return redirect("create_prompt_mockup")
+
+
 class SearchPromptView(ListView):
     def get(self, request):
         song_name = request.GET.get("song_name")
@@ -141,10 +215,10 @@ class UpdatePromptView(UpdateView):
             return redirect("search_prompt")
         
 class GenerateSongView(View):
-    def get(self, request):
+    def get(self, request, lid):
         return render(request, "prompt/generate_song.html")
 
-    def post(self, request):
+    def post(self, request, lid):
         suno_key = os.getenv("SUNO_API_KEY")
         form = PromptForm(request.POST)
         if form.is_valid(): 
@@ -178,17 +252,18 @@ class GenerateSongView(View):
 
             resp = req.post("https://api.sunoapi.org/api/v1/generate", json=params, headers=headers)
             # status = req.get("https://api.sunoapi.org/api/v1/generate/record-info", headers={"Authorization": f"Bearer {suno_key}"})
-            
+            json = resp.json()
             if resp.status_code == 200:
                 print(resp.json())
                 prompt_instance = form.save(commit=False)
-                prompt_instance.generation_status = "generating"
+                prompt_instance.generation_status = Generation.SUCCESS
+                prompt_instance.task_id = json["data"]["taskId"]
                 prompt_instance.save()
                 messages.success(request, "Prompt created successfully") # messages = []
                 return redirect("generate_song")
             else:
                 prompt_instance = form.save(commit=False)
-                prompt_instance.generation_status = "error"
+                prompt_instance.generation_status = Generation.ERROR
                 prompt_instance.save()
                 messages.error(request, "Generating error") # messages = []
                 return redirect("generate_song")
