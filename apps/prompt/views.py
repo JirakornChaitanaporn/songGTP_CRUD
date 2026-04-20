@@ -144,10 +144,10 @@ class CreatePromptView(CreateView):
                 return redirect("create_prompt_template")
 
 class CreatePromptMockupView(CreateView):
-    def get(self, request, lid):
+    def get(self, request):
         return render(request, "prompt/generate_song.html")
     
-    def post(self, request, lid):
+    def post(self, request):
         form = PromptForm(request.POST)
         if form.is_valid():
             form.cleaned_data["task_id"] = "mock" + str(randint(1,69))
@@ -158,14 +158,15 @@ class CreatePromptMockupView(CreateView):
                 prompt = form.cleaned_data["id"],
                 library = lid,
                 song_name=form.cleaned_data["song_name"],
-                image_link="https://example.com/rickroll-image.jpg",
-                song_url="https://raw.githubusercontent.com/karimodm/rubber-pranks/master/rickroll.mp3",
+                image_link="https://jollycontrarian.com/images/6/6c/Rickroll.jpg",
+                song_url="https://www.myinstants.com/media/sounds/rickroll.mp3",
                 shared_link="localhost:8000/id",
                 sharing_status=Status.PRIVATE,
                 description="Get rickrolled",
                 lyrics="There no stranger to loves you know the rule and so do I",
                 length="3.30"
             )
+            song.save()
             return redirect("create_prompt_mockup")
         else:
             messages.error(request, "Generating error") # messages = []
@@ -215,10 +216,10 @@ class UpdatePromptView(UpdateView):
             return redirect("search_prompt")
         
 class GenerateSongView(View):
-    def get(self, request, lid):
+    def get(self, request):
         return render(request, "prompt/generate_song.html")
 
-    def post(self, request, lid):
+    def post(self, request):
         suno_key = os.getenv("SUNO_API_KEY")
         form = PromptForm(request.POST)
         if form.is_valid(): 

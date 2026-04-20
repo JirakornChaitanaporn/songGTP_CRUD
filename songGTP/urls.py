@@ -38,7 +38,7 @@ urlpatterns = [
     path('', HomeView.as_view(), name="home"),
     path('library/', LibraryView.as_view(), name="library"),
     path('song/', SongView.as_view(), name="song"),
-    path('generate_song/<int:lid>', GenerateSongView.as_view(), name="generate_song"),
+    path('generate_song/', GenerateSongView.as_view(), name="generate_song"),
     
     # USER ENDPOINTS
     path('api/users/', UserViewController.as_view()),
@@ -79,7 +79,7 @@ urlpatterns = [
     path('search-prompt/', SearchPromptView.as_view(), name="search_prompt"),
     path('delete-prompt/', DeletePromptView.as_view(), name="delete_prompt_template"),
     path('update-prompt/', UpdatePromptView.as_view(), name="update_prompt_template"),
-    path('create-prompt-mockup/<int:lid>', CreatePromptMockupView.as_view(), name="create_prompt_mockup"),
+    path('create-prompt-mockup/', CreatePromptMockupView.as_view(), name="create_prompt_mockup"),
 
 ]
 
