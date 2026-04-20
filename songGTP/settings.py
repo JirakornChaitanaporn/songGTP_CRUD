@@ -180,12 +180,9 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # Allauth settings
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 SOCIALACCOUNT_AUTO_SIGNUP = True
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'sign_in'
-LOGIN_URL = 'sign_in'
+SOCIALACCOUNT_LOGIN_ON_GET = True  # Skip the "Do you want to sign in?" confirmation page
+LOGIN_REDIRECT_URL = 'library'
+LOGOUT_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'

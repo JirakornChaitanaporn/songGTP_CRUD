@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 # Import all view functions
-from apps.user.views import UserViewController, CreateUserView, SearchUserView , DeleteUserView , UseLoginView, LogoutView
+from apps.user.views import UserViewController, CreateUserView, SearchUserView , DeleteUserView , UserLoginView, LogoutView, GoogleOAuthRedirectView
 from apps.song.views import SongViewController, CreateSongView, SearchSongView, DeleteSongView, UpdateSongView , SongView
 from apps.prompt.views import PromptViewController, CreatePromptView, SearchPromptView, DeletePromptView, UpdatePromptView, GenerateSongView , SunoStatusViewController , CreatePromptMockupView
 from apps.library.views import LibraryViewController, CreateLibraryView, SearchLibraryView, DeleteLibraryView, UpdateLibraryView, LibraryView
@@ -28,12 +28,14 @@ from apps.home.views import HomeView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    #google auth
     path('accounts/', include('allauth.urls')),
-    
-    path('', HomeView.as_view(), name="home"),
-    path('sign-in/', UseLoginView.as_view(), name="sign_in"),
+    path('login/', UserLoginView.as_view(), name="login"),
+    path('auth/google/', GoogleOAuthRedirectView.as_view(), name="google_auth"),
     path('sign-up/', CreateUserView.as_view(), name="sign_up"),
     path('logout/', LogoutView.as_view(), name="logout"),
+    
+    path('', HomeView.as_view(), name="home"),
     path('library/', LibraryView.as_view(), name="library"),
     path('song/', SongView.as_view(), name="song"),
     path('generate_song/<int:lid>', GenerateSongView.as_view(), name="generate_song"),

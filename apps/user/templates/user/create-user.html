@@ -1,65 +1,56 @@
-<!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <title>SongGTP - Sign Up</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap-icons/font/bootstrap-icons.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/global.css' %}" rel="stylesheet">
+    <link href="{% static 'css/login.css' %}" rel="stylesheet">
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="offset-3 col-6">
-                <div class="card">
-                    <h3 class="card-header">Create user</h3>
-                    <div class="card-body">
-                        <form method="POST">
-                            {% csrf_token %} 
-                            <div class="row">
-                                <div class="col-6 mb-2">
-                                    <label for="" class= "form-label">Firstname:</label>
-                                    <input type="text" name="first_name" class="form-control">
-                                </div>
-                                <div class="col-6 mb-2">
-                                    <label for="" class= "form-label">Lastname:</label>
-                                    <input type="text" name="last_name" class="form-control">
-                                </div>
-                                <div class="col-6 mb-2">
-                                    <label for="" class = "form-label">Email:</label>
-                                    <input type="text" name="email" class = "form-control">
-                                </div>
-                                <div class="col-6 mb-2">
-                                    <label for="" class = "form-label">Username:</label>
-                                    <input type="text" name="username" class = "form-control">
-                                </div>
-                                <div class="col-6 mb-2">
-                                    <label for="" class = "form-label">Password:</label>
-                                    <input type="password" name="password" class = "form-control mb-3">
+    <main>
+        <section id="signup" class="login">
+            <div class="row">
+                <div class="offset-4 col-4">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                             <div class="d-flex align-items-center justify-content-center">
+                                <img src="{%static 'images/logo.png' %}" class="logo">
+                                <h1 class="m-0 ms-2 SongGTP fs-3xl">SongGTP</h1>
+                            </div>
+                            <p class = "mb-3 text-secondary">
+                                AI-Powered Song Generation
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card rounded-4 bg-white shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <p class="fw-bold">
+                                                Create your account
+                                            </p>
+                                            <p class = "text-secondary mb-3">
+                                                Sign up with google account
+                                            </p>
+                                            <a href="{% url 'google_auth' %}" class="btn btn-success w-100">
+                                                <i class="bi bi-google text-white me-2"></i>
+                                                Sign up with google
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-success mt-1 mb-3">submit</button>
-                            {% if messages %} 
-                            {% comment %} if messages mean if there is message run theses thing if not it will be false anyway {% endcomment %}
-                            <div>
-                                {% for msg in messages %}
-                                    {% if msg.tags == "success" %}
-                                        <span class = "text-success fw-bold">
-                                            {{ msg }}
-                                        </span>
-                                    {% else %}
-                                        <span class="text-danger fw-bold">
-                                            {{ msg }}
-                                        </span>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                            {% endif %}
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 </body>
 </html>

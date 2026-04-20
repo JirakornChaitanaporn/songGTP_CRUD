@@ -10,6 +10,7 @@ from rest_framework import status
 from .models import User
 from .serializers import UserSerializer
 from .forms import UserForm
+from django.conf import settings
 
 
 # Create your views here.
@@ -60,7 +61,7 @@ class CreateUserView(View):
         if form.is_valid():
             form.save()
             messages.success(request, "User created successfully")
-            return redirect("sign_in")
+            return redirect("login")
         else:
             messages.error(request, "Error creating user. Please check your information.")
             return render(request, "user/create-user.html", {"form": form})
@@ -88,8 +89,13 @@ class DeleteUserView(DeleteView):
             messages.error(request,"User cannot be deleted because this user does not exist")
             
         return redirect("search_user")
+
+class GoogleOAuthRedirectView(View):
+    """Redirect to allauth's Google login — allauth handles the OAuth flow correctly."""
+    def get(self, request):
+        return redirect('/accounts/google/login/')
     
-class UseLoginView(View):
+class UserLoginView(View):
     """Handle user sign-in (login) with Google OAuth and traditional login"""
     def get(self, request):
         return render(request, "user/sign-in.html")
@@ -117,12 +123,12 @@ class LogoutView(View):
     def get(self, request):
         auth_logout(request)
         messages.success(request, "You have been logged out successfully")
-        return redirect("sign_in")
+        return redirect("login")
     
     def post(self, request):
         auth_logout(request)
         messages.success(request, "You have been logged out successfully")
-        return redirect("sign_in")
+        return redirect("login")
 
 
 # class UpdateUserView(UpdateView):
