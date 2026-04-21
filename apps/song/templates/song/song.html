@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="offset-1 col-11">
                         <a href="{% url 'library' %}">
-                            <button class="btn mb-2 back-button fw-bold px-0">
+                            <button class="btn mb-4 back-button fw-bold px-0">
                                 <i class="bi bi-arrow-left-short"></i>
                                 back to library
                             </button>
@@ -24,36 +24,36 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="offset-1 col-5">
-                        <img src="https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=600&h=420&fit=crop" class="w-100 rounded mt-2 mb-2 image-height">
+                    <div class="offset-1 col-md-5">
+                        {% if song.image_link %}
+                        <img src="{{ song.image_link }}" class="w-100 rounded mt-2 mb-4 image-height object-fit-cover shadow-sm">
+                        {% else %}
+                        <img src="https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=600&h=420&fit=crop" class="w-100 rounded mt-2 mb-4 image-height object-fit-cover shadow-sm">
+                        {% endif %}
+
                         <div class="row mt-2">
                             <div class="col-6">
-                                <button class="btn btn-light w-100">
+                                <a href="{{ song.song_url }}" download class="btn btn-light w-100 border">
                                     <i class="bi bi-download"></i>
                                     Download
-                                </button>
+                                </a>
                             </div>
                                 
                             <div class="col-6 ">
-                                <button class="btn btn-light w-100">
+                                <button class="btn btn-light w-100 border" onclick="copyShareLink()">
                                     <i class="bi bi-share"></i>
                                     Share
                                 </button>
                             </div>
-                            
                         </div>
                     </div>
-                    <div class="col-5">
-                        <h1 class="fw-bold mb-2 fs-title">
-                            Neon Dream
+                    <div class="col-md-5">
+                        <h1 class="fw-bold mb-2 fs-title text-brand">
+                            {{ song.song_name }}
                         </h1>
-                        <p class="text-secondary">
-                            AI Composer Suno api
+                        <p class="text-secondary mb-3">
+                            AI Composer {{ song.created_at|date:"F d, Y" }}
                         </p>
-                        <div class="gap-2 mt-2">
-                            <span class="badge rounded bg-light text-dark border px-2 py-1 fw-medium">Rock</span>
-                            <span class="badge rounded bg-mood px-2 py-1 fw-medium">Relax</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -61,4 +61,13 @@
     </main>
 
     {% include "components/footer.html"%}
+
+    <script>
+        function copyShareLink() {
+            const shareLink = "{{ song.shared_link|default:request.build_absolute_uri }}";
+            navigator.clipboard.writeText(shareLink).then(() => {
+                alert("Link copied to clipboard!");
+            });
+        }
+    </script>
 {% endblock %}

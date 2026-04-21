@@ -104,6 +104,8 @@ class UpdateLibraryView(UpdateView):
 class LibraryView(View):
     def get(self, request):
         user_id = request.user.id
-        library = Library.objects.filter(user=user_id)
-        songs = Song.objects.filter(library=library[0].id)
+        library = Library.objects.filter(user=user_id).first()
+        if not library:
+            return render(request, "library/library.html", {"song_list": []})
+        songs = Song.objects.filter(library=library)
         return render(request, "library/library.html", {"song_list":songs})

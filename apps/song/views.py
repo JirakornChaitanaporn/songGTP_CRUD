@@ -105,4 +105,6 @@ class UpdateSongView(UpdateView):
         
 class SongView(View):
     def get(self, request):
-        return render(request, "song/song.html")
+        pk = request.GET.get("id")
+        song = get_object_or_404(Song, id=pk)
+        return render(request, "song/song.html", {"song": song})

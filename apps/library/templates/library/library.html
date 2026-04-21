@@ -27,7 +27,7 @@
                 <div class="row">
                     {% for songs in song_list %}
                         <div class="col-md-4">
-                            {% include "components/lib-song-card.html" with image_link=songs.image_link song_name=songs.song_name song_genre=songs.prompt.song_genre song_mood=songs.prompt.song_mood length=songs.length%}
+                            {% include "components/lib-song-card.html" with song_id=songs.id image_link=songs.image_link song_name=songs.song_name song_genre=songs.prompt.song_genre song_mood=songs.prompt.song_mood length=songs.length%}
                         </div>
                     {% endfor %}
                 </div>

@@ -113,7 +113,7 @@ class UserLoginView(View):
             if user is not None:
                 login(request, user)
                 messages.success(request, f"Welcome back, {user.username}!")
-                return redirect("home")
+                return redirect("library")
             else:
                 messages.error(request, "Invalid username or password")
         
