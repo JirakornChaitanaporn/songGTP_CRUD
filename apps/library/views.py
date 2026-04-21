@@ -5,6 +5,7 @@ from .models import Library
 from .serializers import LibrarySerializer, LibrarySerializerSave
 from django.shortcuts import render, redirect , get_object_or_404
 from .forms import LibraryForm
+from apps.song.models import Song
 from django.contrib import messages
 from apps.user.models import User
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView , View
@@ -102,9 +103,7 @@ class UpdateLibraryView(UpdateView):
         
 class LibraryView(View):
     def get(self, request):
-        songs = [
-            {"prompt": {"song_genre": "soft rock", "song_mood": "Happy"}, "library": 1, "image_link": "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&h=300&fit=crop", "song_name": "Neon Dreams", "length":"4:20"},
-            {"prompt": {"song_genre": "Jazz", "song_mood": "Relax"}, "library": 1, "image_link": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=600&h=300&fit=crop", "song_name": "Midnight Jazz", "length":"4:20"},
-            {"prompt": {"song_genre": "Pop", "song_mood": "Happy"}, "library": 1, "image_link": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=300&fit=crop", "song_name": "Summer Vibes", "length":"4:20"}
-        ]
+        user_id = request.user.id
+        library = Library.objects.filter(user=user_id)
+        songs = Song.objects.filter(library=library[0].id)
         return render(request, "library/library.html", {"song_list":songs})

@@ -1,9 +1,11 @@
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Prompt, Generation
 from apps.song.models import Song
 from apps.song.models import Status
+from apps.library.models import Library
 from apps.song.serializers import SongSerializerSave
 from .serializers import PromptSerializer
 from django.shortcuts import render, redirect, get_object_or_404
@@ -143,31 +145,42 @@ class CreatePromptView(CreateView):
                 messages.error(request, "Generating error") # messages = []
                 return redirect("create_prompt_template")
 
-class CreatePromptMockupView(CreateView):
+class CreatePromptMockupView(LoginRequiredMixin, CreateView):
+    login_url = "/login/"
     def get(self, request):
         return render(request, "prompt/generate_song.html")
     
     def post(self, request):
         form = PromptForm(request.POST)
         if form.is_valid():
-            form.cleaned_data["task_id"] = "mock" + str(randint(1,69))
-            form.cleaned_data["generation_status"] = "generating"
-            form.save()
+            # form.cleaned_data["task_id"] = "mock" + str(randint(1,69))
+            # form.cleaned_data["generation_status"] = "generating"
+            prompt_instance = form.save(commit=False)
+            prompt_instance.task_id = "mock" + str(randint(1,69))
+            prompt_instance.generation_status = Generation.SUCCESS
+            prompt_instance.save()
             messages.success(request, "Prompt created successfully") # messages = []
-            song = Song.objects.create(
-                prompt = form.cleaned_data["id"],
-                library = lid,
-                song_name=form.cleaned_data["song_name"],
-                image_link="https://jollycontrarian.com/images/6/6c/Rickroll.jpg",
-                song_url="https://www.myinstants.com/media/sounds/rickroll.mp3",
-                shared_link="localhost:8000/id",
-                sharing_status=Status.PRIVATE,
-                description="Get rickrolled",
-                lyrics="There no stranger to loves you know the rule and so do I",
-                length="3.30"
-            )
-            song.save()
-            return redirect("create_prompt_mockup")
+            
+            user_id = request.user.id
+            library = Library.objects.filter(user=user_id)
+            if len(library) > 0:
+                song = Song.objects.create(
+                    prompt = prompt_instance,
+                    library = library[0],
+                    song_name = prompt_instance.song_name,
+                    image_link="https://jollycontrarian.com/images/6/6c/Rickroll.jpg",
+                    song_url="https://www.myinstants.com/media/sounds/rickroll.mp3",
+                    shared_link="localhost:8000/id",
+                    sharing_status=Status.PRIVATE,
+                    description="Get rickrolled",
+                    lyrics="There no stranger to loves you know the rule and so do I",
+                    length="3.30"
+                )
+                song.save()
+                return redirect("create_prompt_mockup")
+            else:
+                messages.error(request, "library does not exist")
+                return redirect("create_prompt_mockup")
         else:
             messages.error(request, "Generating error") # messages = []
             return redirect("create_prompt_mockup")
@@ -257,7 +270,7 @@ class GenerateSongView(View):
             if resp.status_code == 200:
                 print(resp.json())
                 prompt_instance = form.save(commit=False)
-                prompt_instance.generation_status = Generation.SUCCESS
+                prompt_instance.generation_status = Generation.PENDING
                 prompt_instance.task_id = json["data"]["taskId"]
                 prompt_instance.save()
                 messages.success(request, "Prompt created successfully") # messages = []

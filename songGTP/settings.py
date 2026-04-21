@@ -73,6 +73,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'apps.user.middleware.LoginRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'songGTP.urls'

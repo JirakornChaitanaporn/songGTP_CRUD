@@ -98,6 +98,8 @@ class GoogleOAuthRedirectView(View):
 class UserLoginView(View):
     """Handle user sign-in (login) with Google OAuth and traditional login"""
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('/library/')
         return render(request, "user/sign-in.html")
     
     def post(self, request):
