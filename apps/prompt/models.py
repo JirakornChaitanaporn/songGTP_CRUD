@@ -27,6 +27,7 @@ class Generation(models.TextChoices):
 
 class Prompt(models.Model):
     task_id = models.CharField(max_length=255, null=True, blank=True)
+    user = models.ForeignKey('user.User',on_delete=models.CASCADE, related_name="prompt", blank=True, null=True)
     song_name = models.CharField(max_length=50)
     song_genre = models.CharField(max_length=20, choices=Genre.choices, default=Genre.POP)
     song_mood = models.CharField(max_length=20, choices=Mood.choices, default=Mood.HAPPY)

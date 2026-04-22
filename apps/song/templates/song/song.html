@@ -4,6 +4,15 @@
 {% block title %} Library - SongGTP {% endblock %}
 {% block import %}
     <link href="{% static 'css/song.css' %}" rel="stylesheet">
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 {% endblock %}
 {% block body %} 
     <header>
@@ -31,29 +40,142 @@
                         <img src="https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=600&h=420&fit=crop" class="w-100 rounded mt-2 mb-4 image-height object-fit-cover shadow-sm">
                         {% endif %}
 
-                        <div class="row mt-2">
-                            <div class="col-6">
-                                <a href="{{ song.song_url }}" download class="btn btn-light w-100 border">
-                                    <i class="bi bi-download"></i>
+                        <div class="row mt-2 g-2">
+                            <div class="col-4">
+                                <a href="{% url 'download_song' pk=song.id %}" class="btn btn-primary w-100 py-2 fw-bold text-truncate">
+                                    <i class="bi bi-download me-1"></i>
                                     Download
                                 </a>
                             </div>
                                 
-                            <div class="col-6 ">
-                                <button class="btn btn-light w-100 border" onclick="copyShareLink()">
-                                    <i class="bi bi-share"></i>
+                            <div class="col-4">
+                                <button class="btn btn-white border w-100 py-2 fw-bold text-truncate" data-bs-toggle="modal" data-bs-target="#shareModal">
+                                    <i class="bi bi-share me-1"></i>
                                     Share
                                 </button>
                             </div>
+
+                            <div class="col-4">
+                                <a href="{% url 'delete_song_template' %}?id={{ song.id }}" class="btn btn-outline-danger w-100 py-2 fw-bold text-truncate" onclick="return confirm('Are you sure you want to delete this song?')">
+                                    <i class="bi bi-trash me-1"></i>
+                                    Delete
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-5">
-                        <h1 class="fw-bold mb-2 fs-title text-brand">
-                            {{ song.song_name }}
-                        </h1>
-                        <p class="text-secondary mb-3">
-                            AI Composer {{ song.created_at|date:"F d, Y" }}
-                        </p>
+                    <div class="col-md-6 px-lg-5">
+                        <div class="row align-items-start">
+                            <div class="col">
+                                <h1 class="fw-bold mb-1 display-6">
+                                    {{ song.song_name }}
+                                </h1>
+                                <p class="text-secondary mb-3">
+                                    AI Composer
+                                </p>
+                            </div>
+                            <div class="col-auto pt-2 text-end">
+                                <span class="badge rounded-pill {% if song.sharing_status == 'public' %}bg-success{% else %}bg-secondary{% endif %}">
+                                    <i class="bi bi-{% if song.sharing_status == 'public' %}globe{% else %}lock-fill{% endif %} me-1"></i>
+                                    {{ song.sharing_status|title }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <span class="badge badge-jazz px-3 py-2 rounded-2 me-2">
+                                <i class="bi bi-music-note-beamed me-1"></i>
+                                {{ song.prompt.song_genre }}
+                            </span>
+                            <span class="badge badge-relaxed px-3 py-2 rounded-2">
+                                <i class="bi bi-stars me-1"></i>
+                                {{ song.prompt.song_mood }}
+                            </span>
+                        </div>
+
+                        <!-- Audio Player Box -->
+                        <div class="player-card p-4 mb-5 pb-5">
+                            {% if song.song_url %}
+                            <div class="audio-container">
+                                <audio controls class="w-100 mb-0">
+                                    <source src="{{ song.song_url }}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                            <!-- Mocking the sleek controls from design since we use standard tag -->
+                            <div class="text-center mt-3 text-secondary font-small">
+                                <i class="bi bi-shuffle mx-3" style="cursor: pointer;"></i>
+                                {% if prev_id %}
+                                <a href="{% url 'song' pk=prev_id %}" class="text-secondary text-decoration-none">
+                                    <i class="bi bi-skip-start-fill mx-3"></i>
+                                </a>
+                                {% else %}
+                                <a href="#" class="text-secondary text-decoration-none" style="opacity: 0.5; cursor: not-allowed;">
+                                    <i class="bi bi-skip-start-fill mx-3"></i>
+                                </a>
+                                {% endif %}
+                                <!-- Play icon is decorative for now since <audio> has its own controls -->
+                                <i class="bi bi-play-circle-fill fs-1 text-success mx-3 align-middle"></i>
+                                {% if next_id %}
+                                <a href="{% url 'song' pk=next_id %}" class="text-secondary text-decoration-none">
+                                    <i class="bi bi-skip-end-fill mx-3"></i>
+                                </a>
+                                {% else %}
+                                <a href="#" class="text-secondary text-decoration-none" style="opacity: 0.5; cursor: not-allowed;">
+                                    <i class="bi bi-skip-end-fill mx-3"></i>
+                                </a>
+                                {% endif %}
+                                <i class="bi bi-repeat mx-3" style="cursor: pointer;"></i>
+                            </div>
+                            {% else %}
+                            <div class="text-center py-4 bg-light rounded text-secondary">
+                                <i class="bi bi-music-note fs-1 d-block mb-2"></i>
+                                Audio is being generated...
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-5">
+                            <h5 class="fw-bold mb-3">Song Information</h5>
+                            <div class="row g-4">
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle bg-light p-2 me-3">
+                                            <i class="bi bi-clock text-secondary"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-secondary font-small">Duration</div>
+                                            <div class="fw-bold">{{ song.length|default:"0:00" }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle bg-light p-2 me-3">
+                                            <i class="bi bi-calendar3 text-secondary"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-secondary font-small">Created</div>
+                                            <div class="fw-bold">{{ song.created_at|date:"F d, Y" }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h5 class="fw-bold mb-3">Description</h5>
+                            <div class="p-3 bg-light rounded-3 border-0">
+                                <p class="text-secondary mb-0">
+                                    {{ song.description|default:"No description provided for this generation." }}
+                                </p>
+                            </div>
+                            {% if song.lyrics %}
+                            <div class="mt-4 p-3 bg-brand-light rounded-3">
+                                <h6 class="fw-bold text-dark"><i class="bi bi-stars me-2"></i>AI Generated Lyrics</h6>
+                                <p class="text-secondary font-small mt-2 mb-0" style="white-space: pre-line;">{{ song.lyrics }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -62,11 +184,40 @@
 
     {% include "components/footer.html"%}
 
+    <!-- Share Modal -->
+    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 1.25rem; overflow: hidden;">
+          <div class="modal-header border-0 pb-0 pt-4 px-4">
+            <h5 class="modal-title fw-bold fs-4" id="shareModalLabel">Share song</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+
+            <div class="mt-4 p-3 bg-light rounded-3 border d-flex align-items-center">
+                <input type="text" class="form-control border-0 bg-transparent text-secondary py-1" id="shareInput" value="{{ song.shared_link }}" readonly>
+                <button class="btn btn-primary rounded-pill px-4 ms-2 fw-bold" onclick="copyToClipboard(this)">
+                    Copy
+                </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
-        function copyShareLink() {
-            const shareLink = "{{ song.shared_link|default:request.build_absolute_uri }}";
-            navigator.clipboard.writeText(shareLink).then(() => {
-                alert("Link copied to clipboard!");
+        function copyToClipboard(btn) {
+            const copyText = document.getElementById("shareInput");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied!";
+                btn.classList.replace("btn-primary", "btn-success");
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.replace("btn-success", "btn-primary");
+                }, 2000);
             });
         }
     </script>

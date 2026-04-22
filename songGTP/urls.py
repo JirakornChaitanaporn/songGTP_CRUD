@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 
 # Import all view functions
 from apps.user.views import UserViewController, CreateUserView, SearchUserView , DeleteUserView , UserLoginView, LogoutView, GoogleOAuthRedirectView
-from apps.song.views import SongViewController, CreateSongView, SearchSongView, DeleteSongView, UpdateSongView , SongView
+from apps.song.views import SongViewController, CreateSongView, SearchSongView, DeleteSongView, UpdateSongView , SongView, DownloadSongView
 from apps.prompt.views import PromptViewController, CreatePromptView, SearchPromptView, DeletePromptView, UpdatePromptView, GenerateSongView , SunoStatusViewController , CreatePromptMockupView
 from apps.library.views import LibraryViewController, CreateLibraryView, SearchLibraryView, DeleteLibraryView, UpdateLibraryView, LibraryView
 from apps.home.views import HomeView
@@ -38,6 +38,8 @@ urlpatterns = [
     path('', HomeView.as_view(), name="home"),
     path('library/', LibraryView.as_view(), name="library"),
     path('song/', SongView.as_view(), name="song"),
+    path('song/<int:pk>', SongView.as_view(), name="song"),
+    path('song/<int:pk>/download', DownloadSongView.as_view(), name="download_song"),
     path('generate_song/', GenerateSongView.as_view(), name="generate_song"),
     
     # USER ENDPOINTS
@@ -51,7 +53,7 @@ urlpatterns = [
     # PROMPT ENDPOINTS
     path('api/prompts/', PromptViewController.as_view()),
     path('api/prompts/<int:pk>', PromptViewController.as_view()),
-    path('api/suno-status/<str:tid>/<int:lid>', SunoStatusViewController.as_view()),
+    path('api/suno-status/<str:tid>/<int:uid>', SunoStatusViewController.as_view()),
     
     # LIBRARY ENDPOINTS
     path('api/libraries/', LibraryViewController.as_view()),

@@ -38,7 +38,7 @@
                                             <p class = "text-secondary mb-3">
                                                 Sign in with google account
                                             </p>
-                                            <a href="{% url 'google_auth' %}" class="btn btn-success w-100">
+                                            <a href="{% url 'google_auth' %}?next={{ request.GET.next }}" class="btn btn-success w-100">
                                                 <i class="bi bi-google text-white me-2"></i>
                                                 Login with google
                                             </a>

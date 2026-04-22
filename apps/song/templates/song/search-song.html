@@ -76,7 +76,11 @@
                                 </a>
                             </td>
                             <td>{{ song.id }}</td>
-                            <td>{{ song.song_name }}</td>
+                            <td>
+                                <a href="/song/{{ song.id }}" class="text-decoration-none fw-bold">
+                                    {{ song.song_name }}
+                                </a>
+                            </td>
                             <td>{{ song.prompt.song_name }}</td>
                             <td>{{ song.library.user.username }}</td>
                             <td>{{ song.sharing_status }}</td>

@@ -93,7 +93,11 @@ class DeleteUserView(DeleteView):
 class GoogleOAuthRedirectView(View):
     """Redirect to allauth's Google login — allauth handles the OAuth flow correctly."""
     def get(self, request):
-        return redirect('/accounts/google/login/')
+        next_url = request.GET.get("next")
+        if next_url:
+            return redirect(f'/accounts/google/login/?next={next_url}')
+        else:
+            return redirect(f'/accounts/google/login/')
     
 class UserLoginView(View):
     """Handle user sign-in (login) with Google OAuth and traditional login"""
@@ -124,12 +128,10 @@ class LogoutView(View):
     """Handle user logout"""
     def get(self, request):
         auth_logout(request)
-        messages.success(request, "You have been logged out successfully")
         return redirect("login")
     
     def post(self, request):
         auth_logout(request)
-        messages.success(request, "You have been logged out successfully")
         return redirect("login")
 
 

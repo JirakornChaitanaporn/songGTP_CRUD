@@ -23,6 +23,6 @@ class LoginRequiredMiddleware:
         if not request.user.is_authenticated:
             #print(f"Not login any = {not any(url.startswith(path) for url in self.allowed_path)}")
             if not any(url.startswith(path) for url in self.allowed_path):
-                return redirect(f"{reverse('login')}")
+                return redirect(f"{reverse('login')}?next={path}")
         return self.get_respone(request)
         

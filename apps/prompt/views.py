@@ -56,45 +56,57 @@ class PromptViewController(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class SunoStatusViewController(APIView):
-    def get(self, request, tid, lid):
+    def get(self, request, tid, uid=None):
         suno_key = os.getenv("SUNO_API_KEY")
         resp = req.get(f"https://api.sunoapi.org/api/v1/generate/record-info?taskId={tid}", headers={"Authorization": f"Bearer {suno_key}"})
         json = resp.json()
+        # print("notif")
         if json["code"] == 200:
             # update prompt
             try:
-                lastest_prompt = Prompt.objects.filter(task_id=tid)
-                if json["data"]["status"] == "SUCCESS":
-                    prompt_serializer = PromptSerializer(lastest_prompt[0], data={"generation_status": Generation.SUCCESS}, partial=True)
-                    if prompt_serializer.is_valid():
-                        saved_prompt = prompt_serializer.save()
-                        song_serializer = SongSerializerSave(data = {
-                            "prompt": saved_prompt.id,
-                            "library": lid,
-                            "song_name": json["data"]["response"]["sunoData"][0]["title"],
-                            "song_url": json["data"]["response"]["sunoData"][0]["audioUrl"],
-                            "shared_link": f"localhost:8000/song/1",
-                            "sharing_status": Status.PRIVATE,
-                            "description": saved_prompt.description,
-                            "lyrics": saved_prompt.lyrics,
-                            "length": json["data"]["response"]["sunoData"][0]["duration"]
-                        })
-                        if song_serializer.is_valid():
-                            print("valid again")
-                            song_serializer.save()
-                        else:
-                            print(song_serializer.errors)
+                user_id = uid or request.user.id
+                print(user_id)
+                library = Library.objects.filter(user=user_id).first()
+                lastest_prompt = Prompt.objects.filter(task_id=tid).first()
+                print(library)
+                if library and lastest_prompt:
+                    print("library and lastest_prompt exist")
+                    if json["data"]["status"] == "SUCCESS":
+                        print('json["data"]["status"] == "SUCCESS"')
+                        prompt_serializer = PromptSerializer(lastest_prompt, data={"generation_status": Generation.SUCCESS}, partial=True)
+                        if prompt_serializer.is_valid():
+                            print('prompt_serializer.is_valid()')
+                            saved_prompt = prompt_serializer.save()
+                            song_serializer = SongSerializerSave(data = {
+                                "prompt": saved_prompt.id,
+                                "library": library.id,
+                                "song_name": lastest_prompt.song_name,
+                                "image_link": json["data"]["response"]["sunoData"][0].get("imageUrl") or "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=2070&auto=format&fit=crop",
+                                "song_url": json["data"]["response"]["sunoData"][0]["audioUrl"],
+                                "shared_link": f"localhost:8000/song/1",
+                                "sharing_status": Status.PRIVATE,
+                                "description": saved_prompt.description,
+                                "lyrics": saved_prompt.lyrics,
+                                "length": json["data"]["response"]["sunoData"][0]["duration"]
+                            })
+                            if song_serializer.is_valid():
+                                print('song_serializer.is_valid()')
+                                saved_song = song_serializer.save()
+                                saved_song.shared_link = f"localhost:8000/song/{saved_song.id}"
+                                saved_song.save()
+                                #
+                            else:
+                                print(song_serializer.errors)
             except Prompt.DoesNotExist:
+                print("not even try")
                 return Response(status=status.HTTP_404_NOT_FOUND)
             
             
             return Response(json, status=status.HTTP_200_OK)
         else:
+            print('else')
             return Response(json, status=status.HTTP_400_BAD_REQUEST)
-        
-        
-
-
+    
 class CreatePromptView(CreateView):
     def get(self, request):
         return render(request, "prompt/create-prompt.html")
@@ -158,6 +170,7 @@ class CreatePromptMockupView(LoginRequiredMixin, CreateView):
             prompt_instance = form.save(commit=False)
             prompt_instance.task_id = "mock" + str(randint(1,69))
             prompt_instance.generation_status = Generation.SUCCESS
+            prompt_instance.user = request.user
             prompt_instance.save()
             messages.success(request, "Prompt created successfully") # messages = []
             
@@ -170,12 +183,13 @@ class CreatePromptMockupView(LoginRequiredMixin, CreateView):
                     song_name = prompt_instance.song_name,
                     image_link= "https://cdn.pixabay.com/photo/2015/10/25/22/00/minecraft-1006433_1280.jpg",
                     song_url="https://tempfile.aiquickdraw.com/r/e2ab2013260f4a239da4f783cfca0630.mp3",
-                    shared_link="localhost:8000/id",
+                    shared_link=f"localhost:8000/song/id",
                     sharing_status=Status.PRIVATE,
                     description="Get rickrolled",
                     lyrics="There no stranger to loves you know the rule and so do I",
                     length="3.30"
                 )
+                song.shared_link = f"localhost:8000/song/{song.id}"
                 song.save()
                 return redirect("create_prompt_mockup")
             else:
@@ -184,7 +198,6 @@ class CreatePromptMockupView(LoginRequiredMixin, CreateView):
         else:
             messages.error(request, "Generating error") # messages = []
             return redirect("create_prompt_mockup")
-
 
 class SearchPromptView(ListView):
     def get(self, request):
@@ -238,7 +251,7 @@ class GenerateSongView(View):
         if form.is_valid(): 
             if form.cleaned_data["lyrics"] == "" or form.cleaned_data["lyrics"] == None:
                 params = {
-                    "customMode": True,
+                    "customMode": False,
                     "Instrumental": False,
                     "model":"V4",
                     "callBackUrl": "https://api.example.com/callback",
@@ -272,6 +285,7 @@ class GenerateSongView(View):
                 prompt_instance = form.save(commit=False)
                 prompt_instance.generation_status = Generation.PENDING
                 prompt_instance.task_id = json["data"]["taskId"]
+                prompt_instance.user = request.user
                 prompt_instance.save()
                 messages.success(request, "Prompt created successfully") # messages = []
                 return redirect("generate_song")

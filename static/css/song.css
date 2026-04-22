@@ -4,5 +4,44 @@
 } 
 
 .image-height {
-    height: 420px;
+    height: 480px;
+}
+
+.player-card {
+    border-radius: 16px;
+    border: 1px solid #f0f0f0;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.song-info-card {
+    border-left: 2px solid #0035AD;
+    background-color: #f8f9fa;
+}
+
+.badge-jazz {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.badge-relaxed {
+    background-color: #0035AD;
+    color: #fff;
+}
+
+.bg-brand-light {
+    background-color: #eef2ff;
+}
+
+.font-small {
+    font-size: 0.85rem;
+}
+
+.btn-white {
+    background-color: #fff;
+    color: #333;
+}
+
+.btn-white:hover {
+    background-color: #f8f9fa;
 }

@@ -9,6 +9,8 @@ from django.contrib import messages
 from apps.prompt.models import Prompt, Generation
 from apps.library.models import Library
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, View
+import requests
+from django.http import StreamingHttpResponse, Http404, HttpResponse
 
 # Create your views here.
 class SongViewController(APIView):
@@ -81,7 +83,7 @@ class DeleteSongView(DeleteView):
             print(f"Song id:{pk} does not exist")
             messages.error(request, "Song cannot be deleted because this song does not exist")
             
-        return redirect("search_song")
+        return redirect("library")
 
 class UpdateSongView(UpdateView):
     def get(self, request):
@@ -104,7 +106,79 @@ class UpdateSongView(UpdateView):
             return redirect("search_song")
         
 class SongView(View):
-    def get(self, request):
-        pk = request.GET.get("id")
-        song = get_object_or_404(Song, id=pk)
-        return render(request, "song/song.html", {"song": song})
+    def get(self, request, pk):
+        from django.core.exceptions import PermissionDenied
+        from django.contrib.auth.views import redirect_to_login
+        
+        song = get_object_or_404(Song, pk=pk)
+        
+        if song.sharing_status != Status.PUBLIC:
+            if not request.user.is_authenticated:
+                return redirect_to_login(request.get_full_path())
+            elif song.library.user != request.user:
+                raise PermissionDenied("You do not have access to this private song.")
+        
+        # Get all songs from all libraries belonging to the user for navigation
+        if request.user.is_authenticated and song.library.user == request.user:
+            user_libraries = Library.objects.filter(user=request.user)
+            library_songs = Song.objects.filter(library__in=user_libraries).distinct().order_by('id')
+            
+            # Find next song in the same library (with looping)
+            next_songs = library_songs.filter(id__gt=song.id)
+            if next_songs.exists():
+                next_song = next_songs.first()
+            else:
+                # Loop back to the first song in the library
+                next_song = library_songs.first()
+            
+            next_id = next_song.id if next_song else None
+            
+            # Find previous song in the same library (with looping)
+            prev_songs = library_songs.filter(id__lt=song.id).order_by('-id')
+            if prev_songs.exists():
+                prev_song = prev_songs.first()
+            else:
+                # Loop back to the last song in the library
+                prev_song = library_songs.last()
+            
+            prev_id = prev_song.id if prev_song else None
+        else:
+            next_id = None
+            prev_id = None
+            
+        return render(request, "song/song.html", {
+            "song": song,
+            "next_id": next_id,
+            "prev_id": prev_id
+        })
+
+class DownloadSongView(View):
+    def get(self, request, pk):
+        from django.core.exceptions import PermissionDenied
+        song = get_object_or_404(Song, pk=pk)
+        
+        # Access control: check if public or if user is owner
+        if song.sharing_status != Status.PUBLIC:
+            if not request.user.is_authenticated:
+                return redirect('login')
+            elif song.library.user != request.user:
+                raise PermissionDenied("You do not have access to download this private song.")
+
+        if not song.song_url:
+            raise Http404("Song URL not found")
+        
+        try:
+            response = requests.get(song.song_url, stream=True)
+            response.raise_for_status()
+            
+            filename = f"{song.song_name}.mp3".replace(" ", "_")
+            content_type = response.headers.get('content-type', 'audio/mpeg')
+            
+            django_response = StreamingHttpResponse(
+                response.iter_content(chunk_size=8192),
+                content_type=content_type
+            )
+            django_response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            return django_response
+        except Exception as e:
+            return HttpResponse(f"Error downloading file: {str(e)}", status=500)
