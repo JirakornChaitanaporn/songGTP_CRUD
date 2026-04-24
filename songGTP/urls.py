@@ -36,7 +36,7 @@ from apps.song.PatchSharingStatusView import PatchSharingStatusView
 from apps.prompt.CreateGenerateSongView import CreateGenerateSongView
 from apps.prompt.CreatePromptMockupView import CreatePromptMockupView
 from apps.prompt.ShowPrompt import ShowPrompt
-from apps.library.views import LibraryView
+from apps.library.GetLibraryView import GetLibraryView
 from apps.home.views import HomeView
 
 urlpatterns = [
@@ -52,7 +52,7 @@ urlpatterns = [
     
     path('', HomeView.as_view(), name="home"),
     
-    path('library/', LibraryView.as_view(), name="library"),
+    path('library/', GetLibraryView.as_view(), name="library"),
     
     path('song/', GetSongView.as_view(), name="song"),
     

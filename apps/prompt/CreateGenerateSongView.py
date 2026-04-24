@@ -6,16 +6,17 @@ from apps.prompt.Context import SongGenerationContext
 
 class CreateGenerateSongView(View):
     """
-    View for the real song generation form.
+    View for the REAL (Suno) song generation form.
 
-    GET  — renders the generate_song.html template.
-    POST — delegates song generation entirely to SongGenerationContext,
-           which reads STRAT_CHOSEN from .env and runs the correct strategy.
+    GET  — renders generate_song.html
+    POST — always uses SunoSongGeneratorStrategy (calls the real Suno API)
+    URL  — /generate-song/
     """
 
     def get(self, request):
         return render(request, "prompt/generate_song.html")
 
     def post(self, request):
-        context = SongGenerationContext()
+        # Always force SUNO strategy — calls the real Suno API
+        context = SongGenerationContext("suno")
         return context.execute(request)

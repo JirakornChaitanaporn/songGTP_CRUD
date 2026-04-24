@@ -7,21 +7,26 @@ class SongGenerationContext:
     """
     Context class for the Strategy Pattern.
 
-    Reads GENERATOR_STRATEGY from the .env file at construction time and
-    wires up the correct concrete strategy automatically.
+    Accepts an explicit strategy name ("mock" or "suno").
+    If no name is passed, falls back to reading GENERATOR_STRATEGY from .env.
 
-    Usage in a view:
+    Usage in a view (explicit — recommended):
+        context = SongGenerationContext("mock")
+        context = SongGenerationContext("suno")
+        return context.execute(request)
+
+    Usage with .env fallback:
         context = SongGenerationContext()
         return context.execute(request)
     """
 
-    def __init__(self):
-        chosen = os.getenv("GENERATOR_STRATEGY", "mock").lower()
+    def __init__(self, strategy: str = None):
+        # Use the explicitly passed strategy name, or fall back to .env
+        chosen = (strategy or os.getenv("GENERATOR_STRATEGY", "mock")).lower()
 
         if chosen == "suno":
             self._strategy = SunoSongGeneratorStrategy()
         else:
-            # Default / fallback to mock (safe for local dev)
             self._strategy = MockSongGeneratorStrategy()
 
     def execute(self, request):
