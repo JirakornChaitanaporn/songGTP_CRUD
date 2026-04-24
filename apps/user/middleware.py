@@ -12,7 +12,8 @@ class LoginRequiredMiddleware:
             reverse('account_logout'),
             reverse('account_signup'),
             "/accounts/google/login/",
-            "/accounts/google/login/callback/"
+            "/accounts/google/login/callback/",
+            reverse('shared_song'),
             
         ]
         
@@ -22,7 +23,7 @@ class LoginRequiredMiddleware:
         
         if not request.user.is_authenticated:
             #print(f"Not login any = {not any(url.startswith(path) for url in self.allowed_path)}")
-            if not any(url.startswith(path) for url in self.allowed_path):
+            if not any(path.startswith(url) for url in self.allowed_path):
                 return redirect(f"{reverse('login')}?next={path}")
         return self.get_respone(request)
         

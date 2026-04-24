@@ -1,0 +1,33 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg shadow-sm bg-brand">
+    <div class="container d-flex justify-content-between">
+
+        <a href="{% url 'home' %}" class="navbar-brand text-decoration-none m-0">
+            <img src="{% static 'images/logo.png' %}" width="36" height="36" alt="SongGTP Logo"
+                class="me-2 align-middle">
+            <span class="text-white fw-bold fs-xl align-middle">SongGTP</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-4">
+                <li class="nav-item mx-1">
+                    <a href="{% url 'home' %}" class="nav-link px-3 {% if page == 'home' %} active {% endif %}">
+                        <i class="bi bi-house me-1"></i> Home
+                    </a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center">
+                <a href="{% url 'login' %}" class="nav-link px-2 mt-1 me-2 text-white">
+                    Login
+                </a>
+                <a href="{% url 'sign_up' %}" class="btn btn-light rounded-pill px-4 fw-bold">
+                    Sign Up
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>

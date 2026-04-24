@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'apps.user.apps.UserConfig',
-    'apps.folder.apps.FolderConfig',
     'apps.song.apps.SongConfig',
     'apps.prompt.apps.PromptConfig',
     'apps.library.apps.LibraryConfig',

@@ -12,7 +12,7 @@ class Song(models.Model):
     song_name = models.CharField(max_length=50)
     image_link = models.CharField(max_length=255, null=True, blank=True)
     song_url = models.CharField(max_length=255)
-    shared_link = models.CharField(max_length=255, blank=True, null=True)
+    shared_code= models.CharField(max_length=255, blank=True, null=True)
 
     sharing_status = models.CharField(max_length=20, choices=Status.choices, default=Status.PRIVATE)
     
@@ -26,4 +26,4 @@ class Song(models.Model):
         db_table = 'song'
 
     def __str__(self):
-        return f"{self.song_name} - {self.generation_status}"
+        return f"{self.song_name}"

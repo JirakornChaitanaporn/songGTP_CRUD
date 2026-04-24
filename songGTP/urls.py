@@ -20,68 +20,56 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 # Import all view functions
-from apps.user.views import UserViewController, CreateUserView, SearchUserView , DeleteUserView , UserLoginView, LogoutView, GoogleOAuthRedirectView
-from apps.song.views import SongViewController, CreateSongView, SearchSongView, DeleteSongView, UpdateSongView , SongView, DownloadSongView
-from apps.prompt.views import PromptViewController, CreatePromptView, SearchPromptView, DeletePromptView, UpdatePromptView, GenerateSongView , SunoStatusViewController , CreatePromptMockupView
-from apps.library.views import LibraryViewController, CreateLibraryView, SearchLibraryView, DeleteLibraryView, UpdateLibraryView, LibraryView
+# from apps.user.views import UserLoginView, LogoutView, GoogleOAuthRedirectView
+# from apps.song.views import SongView, DownloadSongView, PublicSongView, PatchSharingStatusView
+# from apps.prompt.views import GenerateSongView , CreatePromptMockupView, ShowPrompt
+# from apps.library.views import LibraryView
+# from apps.home.views import HomeView
+from apps.user.GoogleOAuthRedirectView import  GoogleOAuthRedirectView
+from apps.user.LogoutView import LogoutView
+from apps.user.UserLoginView import UserLoginView
+from apps.song.GetDownloadSongView import GetDownloadSongView
+from apps.song.GetPublicSongView import GetPublicSongView
+from apps.song.GetSongView import GetSongView
+from apps.song.DeleteSongView import DeleteSongView
+from apps.song.PatchSharingStatusView import PatchSharingStatusView
+from apps.prompt.CreateGenerateSongView import CreateGenerateSongView
+from apps.prompt.CreatePromptMockupView import CreatePromptMockupView
+from apps.prompt.ShowPrompt import ShowPrompt
+from apps.library.views import LibraryView
 from apps.home.views import HomeView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     #google auth
     path('accounts/', include('allauth.urls')),
+    
     path('login/', UserLoginView.as_view(), name="login"),
+    
     path('auth/google/', GoogleOAuthRedirectView.as_view(), name="google_auth"),
-    path('sign-up/', CreateUserView.as_view(), name="sign_up"),
+    
     path('logout/', LogoutView.as_view(), name="logout"),
     
     path('', HomeView.as_view(), name="home"),
+    
     path('library/', LibraryView.as_view(), name="library"),
-    path('song/', SongView.as_view(), name="song"),
-    path('song/<int:pk>', SongView.as_view(), name="song"),
-    path('song/<int:pk>/download', DownloadSongView.as_view(), name="download_song"),
-    path('generate_song/', GenerateSongView.as_view(), name="generate_song"),
     
-    # USER ENDPOINTS
-    path('api/users/', UserViewController.as_view()),
-    path('api/users/<int:pk>', UserViewController.as_view()),
+    path('song/', GetSongView.as_view(), name="song"),
     
-    # SONG ENDPOINTS
-    path('api/songs/', SongViewController.as_view()),
-    path('api/songs/<int:pk>', SongViewController.as_view()),
+    path('song/<int:pk>', GetSongView.as_view(), name="song"),
     
-    # PROMPT ENDPOINTS
-    path('api/prompts/', PromptViewController.as_view()),
-    path('api/prompts/<int:pk>', PromptViewController.as_view()),
-    path('api/suno-status/<str:tid>/<int:uid>', SunoStatusViewController.as_view()),
+    path('shared_song/', GetPublicSongView.as_view(), name="shared_song"),
     
-    # LIBRARY ENDPOINTS
-    path('api/libraries/', LibraryViewController.as_view()),
-    path('api/libraries/<int:pk>', LibraryViewController.as_view()),
+    path('song/<int:pk>/download', GetDownloadSongView.as_view(), name="download_song"),
     
+    path('song/<int:pk>/share-toggle/', PatchSharingStatusView.as_view(), name="patch_sharing_status"),
     
-    # Alternative CRUD (Template Views)
-    # User
-    path('create-user/', CreateUserView.as_view(), name="sign_up_template"),
-    path('search-user/', SearchUserView.as_view(), name="search_user"),
-    path('delete-user/', DeleteUserView.as_view(), name="delete_user_template"),
-    # path('update-user/', UpdateUserView.as_view(), name = "update_user_template"),
-    # Song
-    path('create-song/', CreateSongView.as_view(), name="create_song_template"),
-    path('search-song/', SearchSongView.as_view(), name="search_song"),
-    path('delete-song/', DeleteSongView.as_view(), name="delete_song_template"),
-    path('update-song/', UpdateSongView.as_view(), name="update_song_template"),
-    # Library
-    path('create-library/', CreateLibraryView.as_view(), name="create_library_template"),
-    path('search-library/', SearchLibraryView.as_view(), name="search_library"),
-    path('delete-library/', DeleteLibraryView.as_view(), name="delete_library_template"),
-    path('update-library/', UpdateLibraryView.as_view(), name="update_library_template"),
-    # Prompt
-    path('create-prompt/', CreatePromptView.as_view(), name="create_prompt_template"),
-    path('search-prompt/', SearchPromptView.as_view(), name="search_prompt"),
-    path('delete-prompt/', DeletePromptView.as_view(), name="delete_prompt_template"),
-    path('update-prompt/', UpdatePromptView.as_view(), name="update_prompt_template"),
+    path('generate_song/', CreateGenerateSongView.as_view(), name="generate_song"),
+    
+    path('show_prompt/', ShowPrompt.as_view(), name="show_prompt"), #add user id to the back later
+    
     path('create-prompt-mockup/', CreatePromptMockupView.as_view(), name="create_prompt_mockup"),
 
+    path('delete-song', DeleteSongView.as_view(), name="delete_song_template")
 ]
 

@@ -10,48 +10,14 @@ from django.shortcuts import render, redirect , get_object_or_404
 from .forms import LibraryForm
 from apps.song.models import Song
 from apps.prompt.models import Prompt, Generation
-from apps.prompt.views import SunoStatusViewController
+
 from django.contrib import messages
 from apps.user.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView , View
 
 # Create your views here.
-class LibraryViewController(APIView):
-    def get(self, request):
-        libraries = Library.objects.all()
-        serializer = LibrarySerializer(libraries, many = True)
-        return Response(serializer.data)
 
-    def post(self, request):
-        body = request.data
-        serializer = LibrarySerializerSave(data=body)
-        if serializer.is_valid():
-            serializer.save() # INSERT 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def put(self, request, pk) :
-        body = request.data
-        try:
-            library = Library.objects.get(pk=pk)
-        except Library.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        
-        serializer = LibrarySerializerSave(library, data=body)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        try:
-            library = Library.objects.get(pk=pk)
-        except Library.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        
-        library.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class CreateLibraryView(CreateView):
     def get(self, request):
@@ -115,13 +81,7 @@ class LibraryView(LoginRequiredMixin, View):
         user_id = request.user.id
         # Get 
         unfinished_prompts = Prompt.objects.filter(Q(generation_status=Generation.PENDING) & Q(user=user_id))
-        factory = APIRequestFactory()
-        status_view = SunoStatusViewController.as_view()
-        
-        for prompt in unfinished_prompts:
-            tid = prompt.task_id
-            api_request = factory.get(f"api/suno-status/")
-            status_resp = status_view(api_request, tid=tid, uid=user_id)
+
             
         
         library = Library.objects.filter(user=user_id).first()

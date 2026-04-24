@@ -1,5 +1,15 @@
 import abc
 
+class Factory:
+    def __init__(self, chosen_strat):
+        self.__chosen_strat = chosen_strat
+    
+    def use_strat(self):
+        if self.__chosen_strat == "MOCK":
+            return MockSongGeneratorStrategy()
+        else:
+            return SunoSongGeneratorStrategy()
+
 class StratTemplate(abc.ABC):
     def __init__(self):
         raise NotImplementedError("please implement it")
@@ -7,16 +17,19 @@ class StratTemplate(abc.ABC):
     # def generate_song(self, request):
     #     raise NotImplementedError("Please implement generating song")
     
-    def send_json_to_suno(self):
-        raise NotImplementedError("Please implement send_json_to_suno")
-    
-    def recieve_call_back(self, request):
-        raise NotImplementedError("Please implement recieve_call_back")
+    def generate(self):
+        raise NotImplementedError("Please implement generate")
     
 import os
 from apps.prompt.forms import PromptForm
 from django.contrib import messages
 import requests as req
+from random import randint
+from apps.song.models import Song, Status
+from apps.prompt.models import Generation
+from apps.library.models import Library
+from django.shortcuts import render, redirect
+
 class MockSongGeneratorStrategy(StratTemplate):
     def __init__(self, song_name, song_genre, song_mood, generation_status, description, lyrics, keywords):
         self.song_name = song_name
@@ -27,12 +40,42 @@ class MockSongGeneratorStrategy(StratTemplate):
         self.lyrics = lyrics
         self.keywords = keywords
         
-    def send_json_to_suno(self):
-        resp = "okay"
-        return resp
-    
-    def recieve_call_back(self, request):
-        pass
+    def generate(self, request):
+        form = PromptForm(request.POST)
+        if form.is_valid():
+            # form.cleaned_data["task_id"] = "mock" + str(randint(1,69))
+            # form.cleaned_data["generation_status"] = "generating"
+            prompt_instance = form.save(commit=False)
+            prompt_instance.task_id = "mock" + str(randint(1,69))
+            prompt_instance.generation_status = Generation.SUCCESS
+            prompt_instance.user = request.user
+            prompt_instance.save()
+            messages.success(request, "Prompt created successfully please go to library to see the mock result") # messages = []
+            
+            user_id = request.user.id
+            library = Library.objects.filter(user=user_id)
+            if len(library) > 0:
+                song = Song.objects.create(
+                    prompt = prompt_instance,
+                    library = library[0],
+                    song_name = prompt_instance.song_name,
+                    image_link= "https://cdn.pixabay.com/photo/2015/10/25/22/00/minecraft-1006433_1280.jpg",
+                    song_url="https://tempfile.aiquickdraw.com/r/e2ab2013260f4a239da4f783cfca0630.mp3",
+                    shared_code=f"localhost:8000/song/id",
+                    sharing_status=Status.PRIVATE,
+                    description="Get rickrolled",
+                    lyrics="There no stranger to loves you know the rule and so do I",
+                    length="3.30"
+                )
+                song.shared_code = f"localhost:8000/song/{song.id}"
+                song.save()
+                return redirect("create_prompt_mockup")
+            else:
+                messages.error(request, "library does not exist")
+                return redirect("create_prompt_mockup")
+        else:
+            messages.error(request, "Generating error") # messages = []
+            return redirect("create_prompt_mockup")
 
 class SunoSongGeneratorStrategy(StratTemplate):
     def __init__(self, song_name, song_genre, song_mood, generation_status, description, lyrics, keywords):
@@ -44,7 +87,7 @@ class SunoSongGeneratorStrategy(StratTemplate):
         self.lyrics = lyrics
         self.keywords = keywords
         
-    def send_json_to_suno(self):
+    def generate(self):
         suno_key = os.getenv("SUNO_API_KEY")
         if self.lyrics == "" or self.lyrics == None:
             params = {
@@ -79,16 +122,3 @@ class SunoSongGeneratorStrategy(StratTemplate):
         
         return resp
     
-    
-    def recieve_call_back(self, request):
-        pass
-
-class ChooseStrategy:
-    def __init__(self, chosen_strat):
-        self.__chosen_strat = chosen_strat
-    
-    def use_strat(self):
-        if self.__chosen_strat == "MOCK":
-            return MockSongGeneratorStrategy()
-        else:
-            return SunoSongGeneratorStrategy()

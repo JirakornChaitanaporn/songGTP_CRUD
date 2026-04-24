@@ -1,0 +1,77 @@
+{% extends "layouts/base.html" %}
+
+{% load static %}
+{% block title %} Show_prompt - SongGTP {% endblock %}
+{% block import %}
+    <link href="{% static 'css/show-prompt.css' %}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <header>
+        {% include "components/main-nav.html" with page="show_prompt"%}
+    </header>
+    <main class="py-5">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="fw-bold fs-title text-dark">Prompt History</h1>
+            </div>
+            
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">ID</th>
+                                <th>Created At</th>
+                                <th>Task ID</th>
+                                <th>Song Name</th>
+                                <th>Genre</th>
+                                <th>Mood</th>
+                                <th>Status</th>
+                                <th>Description</th>
+                                <th>Lyrics</th>
+                                <th>Keywords</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in prompt %}
+                            <tr>
+                                <td class="ps-4 text-secondary">#{{p.id}}</td>
+                                <td class="text-nowrap">{{p.created_at|date:"M d, Y H:i"}}</td>
+                                <td class="text-truncate" style="max-width: 100px;">{{p.task_id}}</td>
+                                <td class="fw-bold text-dark">{{p.song_name}}</td>
+                                <td><span class="badge bg-light text-dark fw-normal border">{{p.song_genre}}</span></td>
+                                <td><span class="badge bg-light text-dark fw-normal border">{{p.song_mood}}</span></td>
+                                <td>
+                                    {% if p.generation_status == 'SUCESS' %}
+                                        <span class="badge bg-success-subtle text-success px-3 rounded-pill">{{p.generation_status}}</span>
+                                    {% elif p.generation_status == 'ERROR' %}
+                                        <span class="badge bg-danger-subtle text-danger px-3 rounded-pill">{{p.generation_status}}</span>
+                                    {% else %}
+                                        <span class="badge bg-warning-subtle text-warning px-3 rounded-pill">{{p.generation_status}}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="text-truncate" style="max-width: 150px;" title="{{p.description}}">
+                                        {{p.description}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-truncate" style="max-width: 100px;">
+                                        {{p.lyrics}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-truncate" style="max-width: 100px;">
+                                        {{p.keywords}}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+        {% include "components/footer.html"%}
+{% endblock %}
