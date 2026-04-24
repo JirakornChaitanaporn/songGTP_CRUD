@@ -53,8 +53,8 @@ Then open `.env` and fill in each variable. See the table and guides below.
 
 | Variable | Description | Required |
 |---|---|---|
-| `SUNO_API_KEY` | Your Suno API key for real song generation | Only for `REAL` strategy |
-| `STRAT_CHOSEN` | Generation strategy: `MOCK` or `REAL` | ✅ Yes |
+| `SUNO_API_KEY` | Your Suno API key for real song generation | Only for `suno` strategy |
+| `GENERATOR_STRATEGY` | Generation strategy: `mock` or `suno` | ✅ Yes |
 | `GOOGLE_OAUTH_CLIENT_ID` | Google OAuth 2.0 Client ID | ✅ Yes |
 | `GOOGLE_OAUTH_CLIENT_SECRET` | Google OAuth 2.0 Client Secret | ✅ Yes |
 | `BASE_URL` | Base URL of your local server (default: `http://localhost:8000/`) | ✅ Yes |
@@ -102,14 +102,14 @@ GOOGLE_OAUTH_CLIENT_SECRET="your-client-secret-here"
 
 ---
 
-### 🎵 Choosing a Generation Strategy (`STRAT_CHOSEN`)
+### 🎵 Choosing a Generation Strategy (`GENERATOR_STRATEGY`)
 
 This project supports two song generation strategies:
 
 | Value | Behaviour |
 |---|---|
-| `MOCK` | Generates a fake song instantly using placeholder data — no API key needed, great for testing |
-| `REAL` | Calls the real Suno API to generate actual songs — requires a valid `SUNO_API_KEY` |
+| `mock` | Generates a fake song instantly using placeholder data — no API key needed, great for testing |
+| `suno` | Calls the real Suno API to generate actual songs — requires a valid `SUNO_API_KEY` |
 
 **To get a Suno API Key:**
 1. Visit [https://sunoapi.org/](https://sunoapi.org/) and sign up.
@@ -117,12 +117,12 @@ This project supports two song generation strategies:
 3. Paste it into `.env`:
    ```env
    SUNO_API_KEY="your-suno-api-key-here"
-   STRAT_CHOSEN="REAL"
+   GENERATOR_STRATEGY="suno"
    ```
 
 For local testing without a Suno account, just use:
 ```env
-STRAT_CHOSEN="MOCK"
+GENERATOR_STRATEGY="mock"
 ```
 
 ---
