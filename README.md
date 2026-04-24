@@ -126,3 +126,75 @@ GENERATOR_STRATEGY="mock"
 ```
 
 ---
+
+## 🎨 Architecture & Design Patterns
+
+### 🏗️ Class Diagram (Strategy Pattern)
+The following diagram illustrates how the **Strategy Pattern** is used for Song Generation:
+
+```mermaid
+classDiagram
+    class CreatePromptMockupView {
+        +get(request)
+        +post(request)
+    }
+    class CreateGenerateSongView {
+        +get(request)
+        +post(request)
+    }
+    class SongGenerationContext {
+        -_strategy : SongGenerationStrategy
+        +__init__()
+        +execute(request)
+    }
+    class SongGenerationStrategy {
+        <<interface>>
+        +generate(request)*
+    }
+    class MockSongGeneratorStrategy {
+        +generate(request)
+    }
+    class SunoSongGeneratorStrategy {
+        +generate(request)
+    }
+    
+    CreatePromptMockupView ..> SongGenerationContext : uses
+    CreateGenerateSongView ..> SongGenerationContext : uses
+    SongGenerationContext o-- SongGenerationStrategy : configures
+    MockSongGeneratorStrategy ..|> SongGenerationStrategy : implements
+    SunoSongGeneratorStrategy ..|> SongGenerationStrategy : implements
+```
+
+### 🔄 Sequence Diagram (Song Generation Flow)
+The following sequence diagram shows the execution flow when a user requests to generate a song:
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant View as View (Mock/Generate)
+    participant Context as SongGenerationContext
+    participant Env as .env
+    participant Strategy as Strategy (Mock/Suno)
+    participant API as Database / Suno API
+    
+    User->>View: POST /generate (form data)
+    View->>Context: init SongGenerationContext()
+    Context->>Env: Read GENERATOR_STRATEGY
+    Env-->>Context: "mock" or "suno"
+    
+    alt is "suno"
+        Context->>Context: set strategy = SunoSongGeneratorStrategy()
+    else is "mock"
+        Context->>Context: set strategy = MockSongGeneratorStrategy()
+    end
+    
+    View->>Context: execute(request)
+    Context->>Strategy: generate(request)
+    
+    Strategy->>API: Process request (Call API / Save DB)
+    API-->>Strategy: Return result / Task ID
+    
+    Strategy-->>Context: HttpResponseRedirect
+    Context-->>View: HttpResponseRedirect
+    View-->>User: Redirect to generate page / library
+```
