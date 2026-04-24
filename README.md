@@ -129,11 +129,126 @@ GENERATOR_STRATEGY="mock"
 
 ## 🎨 Architecture & Design Patterns
 
-### 🏗️ Class Diagram (Strategy Pattern)
-The following diagram illustrates how the **Strategy Pattern** is used for Song Generation:
+### 🏗️ Class Diagram (Full Application & Strategy Pattern)
+This diagram illustrates all the major components of the system, matching the application's actual Django structure and including the Strategy Pattern for song generation.
 
 ```mermaid
 classDiagram
+    %% Django Base Models
+    class Model {
+        <<Django Model>>
+    }
+    class AbstractUser {
+        <<Django Model>>
+    }
+    
+    %% Application Models
+    class UserModel {
+        +id : int
+        +email : str
+        +first_name : str
+        +last_name : str
+        +created_at : datetime
+    }
+    
+    class LibraryModel {
+        +id : int
+        +user_id : int
+        +created_at : datetime
+    }
+    
+    class PromptModel {
+        +id : int
+        +task_id : str
+        +song_name : str
+        +song_genre : Genre
+        +song_mood : Mood
+        +generation_status : Generation
+        +description : str
+        +lyrics : str
+        +keywords : str
+        +created_at : datetime
+    }
+    
+    class SongModel {
+        +id : int
+        +prompt_id : int
+        +library_id : int
+        +song_name : str
+        +shared_link : str
+        +sharing_status : Status
+        +song_url : str
+        +description : str
+        +lyrics : str
+        +length : str
+        +created_at : datetime
+    }
+
+    AbstractUser <|-- UserModel
+    Model <|-- LibraryModel
+    Model <|-- PromptModel
+    Model <|-- SongModel
+
+    %% Relationships
+    UserModel "1" -- "1" LibraryModel : has
+    UserModel "1" -- "0..*" PromptModel : has
+    LibraryModel "1" -- "0..*" SongModel : has
+    PromptModel "1" -- "1" SongModel : has
+
+    %% Enumerations
+    class Mood {
+        <<enumeration>>
+        Happy
+        Sad
+        Romantic
+        Angry
+        Energetic
+        Calm
+    }
+    class Genre {
+        <<enumeration>>
+        Pop
+        Rock
+        Heavy_metal
+        Soft_rock
+        Pop_rock
+        Country
+    }
+    class Generation {
+        <<enumeration>>
+        Pending
+        Text_Success
+        First_Success
+        Success
+        Error
+    }
+    class Status {
+        <<enumeration>>
+        Public
+        Private
+    }
+
+    PromptModel ..> Mood
+    PromptModel ..> Genre
+    PromptModel ..> Generation
+    SongModel ..> Status
+
+    %% Views
+    class UserLoginView {
+        +get(request)
+        +post(request)
+    }
+    class LogoutView {
+        +get(request)
+        +post(request)
+    }
+    class CreateLibraryView {
+        +get(request)
+        +post(request)
+    }
+    class SearchLibraryView {
+        +get(request)
+    }
     class CreatePromptMockupView {
         +get(request)
         +post(request)
@@ -142,6 +257,17 @@ classDiagram
         +get(request)
         +post(request)
     }
+    class DeleteSongView {
+        +get(request)
+    }
+    class SongView {
+        +get(request, pk)
+    }
+    class PublicSongView {
+        +get(request)
+    }
+
+    %% Strategy Pattern Components
     class SongGenerationContext {
         -_strategy : SongGenerationStrategy
         +__init__()
@@ -157,12 +283,22 @@ classDiagram
     class SunoSongGeneratorStrategy {
         +generate(request)
     }
-    
+
     CreatePromptMockupView ..> SongGenerationContext : uses
     CreateGenerateSongView ..> SongGenerationContext : uses
     SongGenerationContext o-- SongGenerationStrategy : configures
     MockSongGeneratorStrategy ..|> SongGenerationStrategy : implements
     SunoSongGeneratorStrategy ..|> SongGenerationStrategy : implements
+    
+    %% View Dependencies (Conceptual)
+    UserLoginView ..> UserModel : access
+    CreateLibraryView ..> LibraryModel : access
+    SearchLibraryView ..> LibraryModel : access
+    CreatePromptMockupView ..> PromptModel : access
+    CreateGenerateSongView ..> PromptModel : access
+    DeleteSongView ..> SongModel : access
+    SongView ..> SongModel : access
+    PublicSongView ..> SongModel : access
 ```
 
 ### 🔄 Sequence Diagram (Song Generation Flow)
