@@ -125,6 +125,23 @@ For local testing without a Suno account, just use:
 GENERATOR_STRATEGY="mock"
 ```
 
+### 🧠 Using the Strategy Pattern in Code
+
+As part of the **Strategy Pattern** implementation, the application dynamically selects how to generate songs via the `SongGenerationContext`. You can choose the strategy in two ways:
+
+1. **Global Config (`.env` variable):** Change the `GENERATOR_STRATEGY` (historically referred to as `STRAT_CHOSEN`) in your `.env` file to either `mock` or `suno`. This will act as the default strategy if one isn't explicitly provided.
+   
+2. **Explicit Selection in Views:** You can easily bypass the `.env` variable by passing the explicit strategy name directly inside the views. This ensures that specific views always use their designated generator, completely bypassing the `.env` default.
+   ```python
+   # In CreatePromptMockupView.py
+   context = SongGenerationContext("mock")  # Forces the mock strategy
+   return context.execute(request)
+
+   # In CreateGenerateSongView.py
+   context = SongGenerationContext("suno")  # Forces the Suno strategy
+   return context.execute(request)
+   ```
+
 ---
 
 ## 🎨 Architecture & Design Patterns
