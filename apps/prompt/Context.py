@@ -1,6 +1,7 @@
 import os
 
-from apps.prompt.strategy import MockSongGeneratorStrategy, SunoSongGeneratorStrategy
+from apps.prompt.MockSongGeneratorStrategy import MockSongGeneratorStrategy
+from apps.prompt.SunoSongGeneratorStrategy import SunoSongGeneratorStrategy
 
 
 class SongGenerationContext:
