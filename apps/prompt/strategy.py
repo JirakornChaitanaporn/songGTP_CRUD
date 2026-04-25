@@ -60,8 +60,7 @@ class MockSongGeneratorStrategy(SongGenerationStrategy):
                     lyrics="Mock song",
                     length="210.0",
                 )
-                # Update shared_code with real song ID after creation
-                song.shared_code = f"localhost:8000/song/{song.id}"
+                # Ensure the hash code is preserved as the shared_code
                 song.save()
 
                 return redirect("create_prompt_mockup")

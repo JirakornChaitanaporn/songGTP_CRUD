@@ -8,6 +8,7 @@ from apps.song.serializers import SongSerializerSave
 from .serializers import PromptSerializer
 import os
 import requests as req
+import hashlib
 
 class SunoStatusViewController(APIView):
     def get(self, request, tid, uid=None):
@@ -31,13 +32,17 @@ class SunoStatusViewController(APIView):
                         if prompt_serializer.is_valid():
                             print('prompt_serializer.is_valid()')
                             saved_prompt = prompt_serializer.save()
+                            hash_code = hashlib.sha256(
+                                f"prompt-{saved_prompt.id}".encode()
+                            ).hexdigest()[:12]
+
                             song_serializer = SongSerializerSave(data = {
                                 "prompt": saved_prompt.id,
                                 "library": library.id,
                                 "song_name": lastest_prompt.song_name,
                                 "image_link": json["data"]["response"]["sunoData"][0].get("imageUrl") or "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=2070&auto=format&fit=crop",
                                 "song_url": json["data"]["response"]["sunoData"][0]["audioUrl"],
-                                "shared_link": f"localhost:8000/song/1",
+                                "shared_code": hash_code,
                                 "sharing_status": Status.PRIVATE,
                                 "description": saved_prompt.description,
                                 "lyrics": saved_prompt.lyrics,
@@ -46,8 +51,6 @@ class SunoStatusViewController(APIView):
                             if song_serializer.is_valid():
                                 print('song_serializer.is_valid()')
                                 saved_song = song_serializer.save()
-                                saved_song.shared_link = f"localhost:8000/song/{saved_song.id}"
-                                saved_song.save()
                                 #
                             else:
                                 print(song_serializer.errors)
