@@ -151,192 +151,225 @@ This diagram illustrates the classes exactly as they exist in the Django codebas
 
 ```mermaid
 classDiagram
-    %% Django Base Classes
-    class Model {
-        <<Django Model>>
-    }
-    class AbstractUser {
-        <<Django Model>>
-    }
-    class View {
-        <<Django View>>
-    }
-    class CreateView {
-        <<Django View>>
-    }
-    
-    %% Models
-    class User {
-        +id : int
-        +username : str
-        +email : str
-        +created_at : datetime
-    }
-    
-    class Library {
-        +id : int
-        +user_id : int
-        +created_at : datetime
-    }
-    
-    class Prompt {
-        +id : int
-        +task_id : str
-        +user_id : int
-        +song_name : str
-        +song_genre : str
-        +song_mood : str
-        +generation_status : str
-        +description : str
-        +lyrics : str
-        +keywords : str
-        +created_at : datetime
-    }
-    
-    class Song {
-        +id : int
-        +prompt_id : int
-        +library_id : int
-        +song_name : str
-        +image_link : str
-        +song_url : str
-        +shared_code : str
-        +sharing_status : str
-        +description : str
-        +lyrics : str
-        +length : str
-        +created_at : datetime
+    namespace Django_Template {
+        class login_html {
+            <<Template>>
+        }
+        class library_html {
+            <<Template>>
+        }
+        class generate_song_html {
+            <<Template>>
+        }
+        class prompt_table_html {
+            <<Template>>
+        }
+        class song_html {
+            <<Template>>
+        }
+        class song_public_html {
+            <<Template>>
+        }
     }
 
+    namespace Django_View {
+        class UserLoginView {
+            +get(request)
+            +post(request)
+        }
+        class GoogleOAuthRedirectView {
+            +get(request)
+        }
+        class LogoutView {
+            +get(request)
+        }
+        class CreateLibraryView {
+            +get(request)
+            +post(request)
+        }
+        class LibraryView {
+            +get(request)
+        }
+        class SearchLibraryView {
+            +get(request)
+        }
+        class DeleteLibraryView {
+            +get(request)
+            +post(request)
+        }
+        class UpdateLibraryView {
+            +get(request)
+            +post(request)
+        }
+        class CreatePromptMockupView {
+            +get(request)
+            +post(request)
+        }
+        class CreateGenerateSongView {
+            +get(request)
+            +post(request)
+        }
+        class ShowPrompt {
+            +get(request)
+        }
+        class SunoStatusViewController {
+            +get(request, tid, uid)
+        }
+        class DeleteSongView {
+            +get(request)
+        }
+        class GetSongView {
+            +get(request, pk)
+        }
+        class PatchSharingStatusView {
+            +post(request, pk)
+        }
+        class GetPublicSongView {
+            +get(request)
+        }
+        class GetDownloadSongView {
+            +get(request, pk)
+        }
+    }
+
+    namespace Django_Model {
+        class AbstractUser {
+            <<Django Model>>
+        }
+        class Model {
+            <<Django Model>>
+        }
+        class User {
+            +id : int
+            +username : str
+            +email : str
+            +created_at : datetime
+        }
+        class Library {
+            +id : int
+            +user_id : int
+            +created_at : datetime
+        }
+        class Prompt {
+            +id : int
+            +task_id : str
+            +user_id : int
+            +song_name : str
+            +song_genre : str
+            +song_mood : str
+            +generation_status : str
+            +description : str
+            +lyrics : str
+            +keywords : str
+            +created_at : datetime
+        }
+        class Song {
+            +id : int
+            +prompt_id : int
+            +library_id : int
+            +song_name : str
+            +image_link : str
+            +song_url : str
+            +shared_code : str
+            +sharing_status : str
+            +description : str
+            +lyrics : str
+            +length : str
+            +created_at : datetime
+        }
+        class Mood {
+            <<TextChoices>>
+            HAPPY, SAD, ROMANTIC, ANGRY, ENERGETIC, CALM
+        }
+        class Genre {
+            <<TextChoices>>
+            POP, ROCK, HEAVY_METAL, SOFT_ROCK, POP_ROCK, COUNTRY
+        }
+        class Generation {
+            <<TextChoices>>
+            PENDING, TEXT_SUCCESS, FIRST_SUCCESS, SUCCESS, ERROR
+        }
+        class Status {
+            <<TextChoices>>
+            PUBLIC, PRIVATE
+        }
+    }
+
+    namespace Strategy_Pattern {
+        class SongGenerationContext {
+            -_strategy : SongGenerationStrategy
+            +__init__()
+            +execute(request)
+        }
+        class SongGenerationStrategy {
+            <<ABC>>
+            +generate(request)*
+        }
+        class MockSongGeneratorStrategy {
+            +generate(request)
+        }
+        class SunoSongGeneratorStrategy {
+            +generate(request)
+        }
+    }
+
+    %% Inheritance
     AbstractUser <|-- User
     Model <|-- Library
     Model <|-- Prompt
     Model <|-- Song
 
-    %% Model Relationships
+    %% Model Associations
     User "1" -- "1" Library : has
     User "1" -- "0..*" Prompt : has
     Library "1" -- "0..*" Song : has
     Prompt "1" -- "1" Song : has
 
-    %% Enumerations (TextChoices)
-    class Mood {
-        <<TextChoices>>
-        HAPPY, SAD, ROMANTIC, ANGRY, ENERGETIC, CALM
-    }
-    class Genre {
-        <<TextChoices>>
-        POP, ROCK, HEAVY_METAL, SOFT_ROCK, POP_ROCK, COUNTRY
-    }
-    class Generation {
-        <<TextChoices>>
-        PENDING, TEXT_SUCCESS, FIRST_SUCCESS, SUCCESS, ERROR
-    }
-    class Status {
-        <<TextChoices>>
-        PUBLIC, PRIVATE
-    }
+    %% Template to View Relationships
+    login_html ..> UserLoginView : HTTP
+    login_html ..> GoogleOAuthRedirectView : HTTP
+    
+    library_html ..> LibraryView : HTTP
+    library_html ..> CreateLibraryView : HTTP
+    library_html ..> SearchLibraryView : HTTP
+    library_html ..> DeleteLibraryView : HTTP
+    library_html ..> UpdateLibraryView : HTTP
+    library_html ..> LogoutView : HTTP
+    
+    generate_song_html ..> CreatePromptMockupView : HTTP
+    generate_song_html ..> CreateGenerateSongView : HTTP
+    
+    prompt_table_html ..> ShowPrompt : HTTP
+    
+    song_html ..> GetSongView : HTTP
+    song_html ..> DeleteSongView : HTTP
+    song_html ..> PatchSharingStatusView : HTTP
+    song_html ..> GetDownloadSongView : HTTP
+    
+    song_public_html ..> GetPublicSongView : HTTP
 
-    %% User Views
-    class GoogleOAuthRedirectView {
-        +get(request)
-    }
-    class UserLoginView {
-        +get(request)
-        +post(request)
-    }
-    class LogoutView {
-        +get(request)
-        +post(request)
-    }
-    View <|-- GoogleOAuthRedirectView
-    View <|-- UserLoginView
-    View <|-- LogoutView
+    %% View to Model Relationships
+    UserLoginView ..> User : access
+    GoogleOAuthRedirectView ..> User : access
+    
+    LibraryView ..> Library : access
+    CreateLibraryView ..> Library : access
+    SearchLibraryView ..> Library : access
+    DeleteLibraryView ..> Library : access
+    UpdateLibraryView ..> Library : access
+    
+    CreatePromptMockupView ..> Prompt : access
+    CreateGenerateSongView ..> Prompt : access
+    ShowPrompt ..> Prompt : access
+    SunoStatusViewController ..> Prompt : access
+    SunoStatusViewController ..> Song : access
+    
+    GetSongView ..> Song : access
+    DeleteSongView ..> Song : access
+    PatchSharingStatusView ..> Song : access
+    GetPublicSongView ..> Song : access
 
-    %% Library Views
-    class CreateLibraryView {
-        +get(request)
-        +post(request)
-    }
-    class SearchLibraryView {
-        +get(request)
-    }
-    class DeleteLibraryView {
-        +get(request)
-        +post(request)
-    }
-    class UpdateLibraryView {
-        +get(request)
-        +post(request)
-    }
-    class LibraryView {
-        +get(request)
-    }
-    CreateView <|-- CreateLibraryView
-    View <|-- SearchLibraryView
-    View <|-- DeleteLibraryView
-    View <|-- UpdateLibraryView
-    View <|-- LibraryView
-
-    %% Prompt Views
-    class CreatePromptMockupView {
-        +get(request)
-        +post(request)
-    }
-    class CreateGenerateSongView {
-        +get(request)
-        +post(request)
-    }
-    class ShowPrompt {
-        +get(request)
-    }
-    class SunoStatusViewController {
-        +get(request, tid, uid)
-    }
-    CreateView <|-- CreatePromptMockupView
-    View <|-- CreateGenerateSongView
-    View <|-- ShowPrompt
-    View <|-- SunoStatusViewController
-
-    %% Song Views
-    class DeleteSongView {
-        +get(request)
-    }
-    class GetSongView {
-        +get(request, pk)
-    }
-    class PatchSharingStatusView {
-        +post(request, pk)
-    }
-    class GetPublicSongView {
-        +get(request)
-    }
-    class GetDownloadSongView {
-        +get(request, pk)
-    }
-    View <|-- DeleteSongView
-    View <|-- GetSongView
-    View <|-- PatchSharingStatusView
-    View <|-- GetPublicSongView
-    View <|-- GetDownloadSongView
-
-    %% Strategy Pattern Components
-    class SongGenerationContext {
-        -_strategy : SongGenerationStrategy
-        +__init__()
-        +execute(request)
-    }
-    class SongGenerationStrategy {
-        <<ABC>>
-        +generate(request)*
-    }
-    class MockSongGeneratorStrategy {
-        +generate(request)
-    }
-    class SunoSongGeneratorStrategy {
-        +generate(request)
-    }
-
+    %% Strategy Pattern Relationships
     CreatePromptMockupView ..> SongGenerationContext : uses
     CreateGenerateSongView ..> SongGenerationContext : uses
     SongGenerationContext o-- SongGenerationStrategy : configures
