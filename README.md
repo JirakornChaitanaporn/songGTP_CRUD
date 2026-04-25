@@ -221,19 +221,40 @@ classDiagram
     }
 
     %% User Views
-    class GoogleOAuthRedirectView
-    class UserLoginView
-    class LogoutView
+    class GoogleOAuthRedirectView {
+        +get(request)
+    }
+    class UserLoginView {
+        +get(request)
+        +post(request)
+    }
+    class LogoutView {
+        +get(request)
+        +post(request)
+    }
     View <|-- GoogleOAuthRedirectView
     View <|-- UserLoginView
     View <|-- LogoutView
 
     %% Library Views
-    class CreateLibraryView
-    class SearchLibraryView
-    class DeleteLibraryView
-    class UpdateLibraryView
-    class LibraryView
+    class CreateLibraryView {
+        +get(request)
+        +post(request)
+    }
+    class SearchLibraryView {
+        +get(request)
+    }
+    class DeleteLibraryView {
+        +get(request)
+        +post(request)
+    }
+    class UpdateLibraryView {
+        +get(request)
+        +post(request)
+    }
+    class LibraryView {
+        +get(request)
+    }
     CreateView <|-- CreateLibraryView
     View <|-- SearchLibraryView
     View <|-- DeleteLibraryView
@@ -241,21 +262,41 @@ classDiagram
     View <|-- LibraryView
 
     %% Prompt Views
-    class CreatePromptMockupView
-    class CreateGenerateSongView
-    class ShowPrompt
-    class SunoStatusViewController
+    class CreatePromptMockupView {
+        +get(request)
+        +post(request)
+    }
+    class CreateGenerateSongView {
+        +get(request)
+        +post(request)
+    }
+    class ShowPrompt {
+        +get(request)
+    }
+    class SunoStatusViewController {
+        +get(request, tid, uid)
+    }
     CreateView <|-- CreatePromptMockupView
     View <|-- CreateGenerateSongView
     View <|-- ShowPrompt
     View <|-- SunoStatusViewController
 
     %% Song Views
-    class DeleteSongView
-    class GetSongView
-    class PatchSharingStatusView
-    class GetPublicSongView
-    class GetDownloadSongView
+    class DeleteSongView {
+        +get(request)
+    }
+    class GetSongView {
+        +get(request, pk)
+    }
+    class PatchSharingStatusView {
+        +post(request, pk)
+    }
+    class GetPublicSongView {
+        +get(request)
+    }
+    class GetDownloadSongView {
+        +get(request, pk)
+    }
     View <|-- DeleteSongView
     View <|-- GetSongView
     View <|-- PatchSharingStatusView
