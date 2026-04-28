@@ -14,9 +14,9 @@ class SongGenerationContext:
         return (user_choice or "mock").lower(), False
 
     def __init__(self, strategy: str = None):
-        # .env takes priority; fall back to the caller's choice when .env is blank
-        env_strategy = os.getenv("GENERATOR_STRATEGY", "").strip()
-        chosen = (env_strategy if env_strategy else (strategy or "mock")).lower()
+        # .env takes priority only when set to a recognised value; typos/blank fall back to caller
+        env_strategy = os.getenv("GENERATOR_STRATEGY", "").strip().lower()
+        chosen = env_strategy if env_strategy in {"mock", "suno"} else (strategy or "mock").lower()
 
         if chosen == "suno":
             self._strategy = SunoSongGeneratorStrategy()

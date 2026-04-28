@@ -24,6 +24,8 @@ class CreateGenerateSongView(View):
         })
 
     def post(self, request):
-        # Always force SUNO strategy — calls the real Suno API
+        strategy, forced = SongGenerationContext.resolve("suno")
+        if forced and strategy != "suno":
+            return redirect("create_prompt_mockup")
         context = SongGenerationContext("suno")
         return context.execute(request)

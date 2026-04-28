@@ -24,6 +24,8 @@ class CreatePromptMockupView(CreateView):
         })
 
     def post(self, request):
-        # Always force MOCK strategy — no matter what .env says
+        strategy, forced = SongGenerationContext.resolve("mock")
+        if forced and strategy != "mock":
+            return redirect("generate_song")
         context = SongGenerationContext("mock")
         return context.execute(request)
