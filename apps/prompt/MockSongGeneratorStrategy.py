@@ -52,7 +52,31 @@ class MockSongGeneratorStrategy(SongGenerationStrategy):
                     shared_code=hash_code,
                     sharing_status=Status.PRIVATE,
                     description="Just a mock song",
-                    lyrics="Mock song",
+                    lyrics="[Intro]\n\
+You can add more word than this to make the song more meaningful\n\
+Talking about a guy who plays Minecraft with villager with happiness and joy\n\
+Duration two-two-three minutes\n\
+[Verse / Chorus]\n\
+Mood of can made me hold in this to me\n\
+The will your riverley with hope\n\
+With happiness and joy, and joy\n\
+Duration two-two-three minutes\n\
+Duration to do\n\
+Duration two-to-three minutes\n\
+[Bridge]\n\
+Happiness and joy\n\
+Mood of can made me hold in this to me\n\
+The will your riverley with hope\n\
+Mood of can made me hold in this to me\n\
+The will your riverley with hope\n\
+[Outro]\n\
+With happiness and joy, and joy\n\
+Duration two-two-three minutes\n\
+Duration to do\n\
+Duration to-to\
+Duration two-to-three minutes\n\
+Duration two-to-three...\n\
+To three minutes",
                     length="210.0",
                 )
                 # Ensure the hash code is preserved as the shared_code

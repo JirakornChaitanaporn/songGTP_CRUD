@@ -42,7 +42,7 @@
                                 <td><span class="badge bg-light text-dark fw-normal border">{{p.song_genre}}</span></td>
                                 <td><span class="badge bg-light text-dark fw-normal border">{{p.song_mood}}</span></td>
                                 <td>
-                                    {% if p.generation_status == 'SUCESS' %}
+                                    {% if p.generation_status == 'SUCCESS' %}
                                         <span class="badge bg-success-subtle text-success px-3 rounded-pill">{{p.generation_status}}</span>
                                     {% elif p.generation_status == 'ERROR' %}
                                         <span class="badge bg-danger-subtle text-danger px-3 rounded-pill">{{p.generation_status}}</span>

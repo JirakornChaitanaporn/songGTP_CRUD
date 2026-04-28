@@ -36,17 +36,25 @@ class SunoStatusViewController(APIView):
                                 f"prompt-{saved_prompt.id}".encode()
                             ).hexdigest()[:12]
 
+                            suno_data = json["data"]["response"]["sunoData"][0]
+                            lyrics = self._resolve_lyrics(
+                                user_lyrics=saved_prompt.lyrics,
+                                suno_prompt=suno_data.get("prompt", ""),
+                                task_id=tid,
+                                suno_key=suno_key,
+                            )
+
                             song_serializer = SongSerializerSave(data = {
                                 "prompt": saved_prompt.id,
                                 "library": library.id,
                                 "song_name": lastest_prompt.song_name,
-                                "image_link": json["data"]["response"]["sunoData"][0].get("imageUrl") or "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=2070&auto=format&fit=crop",
-                                "song_url": json["data"]["response"]["sunoData"][0]["audioUrl"],
+                                "image_link": suno_data.get("imageUrl") or "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=2070&auto=format&fit=crop",
+                                "song_url": suno_data["audioUrl"],
                                 "shared_code": hash_code,
                                 "sharing_status": Status.PRIVATE,
                                 "description": saved_prompt.description,
-                                "lyrics": saved_prompt.lyrics,
-                                "length": json["data"]["response"]["sunoData"][0]["duration"]
+                                "lyrics": lyrics,
+                                "length": suno_data["duration"]
                             })
                             if song_serializer.is_valid():
                                 print('song_serializer.is_valid()')
@@ -63,3 +71,26 @@ class SunoStatusViewController(APIView):
         else:
             print('else')
             return Response(json, status=status.HTTP_400_BAD_REQUEST)
+
+    def _resolve_lyrics(self, user_lyrics: str, suno_prompt: str, task_id: str, suno_key: str) -> str:
+        # Priority 1: user typed lyrics in the form
+        if user_lyrics and user_lyrics.strip():
+            return user_lyrics
+
+        # Priority 2: Suno returned lyrics in the generate response prompt field
+        if suno_prompt and suno_prompt.strip():
+            return suno_prompt
+
+        # Priority 3: call the dedicated lyrics endpoint as a last resort
+        try:
+            resp = req.get(
+                f"https://api.sunoapi.org/api/v1/lyrics/record-info?taskId={task_id}",
+                headers={"Authorization": f"Bearer {suno_key}"},
+            )
+            data = resp.json()
+            if data.get("code") == 200:
+                return data.get("data", {}).get("lyrics", "") or ""
+        except Exception:
+            pass
+
+        return ""

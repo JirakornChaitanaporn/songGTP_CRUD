@@ -2,7 +2,6 @@ from .models import Song, Status
 from django.shortcuts import render, get_object_or_404
 from apps.library.models import Library
 from django.views.generic import View
-import os
 
 class GetSongView(View):
     def get(self, request, pk):
@@ -49,5 +48,5 @@ class GetSongView(View):
             "song": song,
             "next_id": next_id,
             "prev_id": prev_id,
-            "base_url": os.getenv("BASE_URL")
+            "base_url": request.build_absolute_uri('/')
         })

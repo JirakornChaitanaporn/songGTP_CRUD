@@ -111,6 +111,33 @@ This project supports two song generation strategies:
 | `mock` | Generates a fake song instantly using placeholder data — no API key needed, great for testing |
 | `suno` | Calls the real Suno API to generate actual songs — requires a valid `SUNO_API_KEY` |
 
+#### ⚙️ How `GENERATOR_STRATEGY` Works
+
+The strategy is resolved with the following priority:
+
+```
+.env GENERATOR_STRATEGY set to "mock" or "suno"  →  always uses that strategy (locked)
+.env GENERATOR_STRATEGY is blank or invalid       →  user chooses via the toggle button in the UI
+```
+
+| `.env` value | Who controls the strategy | Toggle button in UI |
+|---|---|---|
+| `mock` | `.env` (locked) | Disabled |
+| `suno` | `.env` (locked) | Disabled |
+| *(blank)* | User (via UI toggle) | Enabled |
+| *(invalid value)* | Falls back to user choice | Enabled |
+
+**Lock the strategy via `.env` (recommended for production / CI):**
+```env
+GENERATOR_STRATEGY="suno"   # always uses Suno API regardless of what user clicks
+GENERATOR_STRATEGY="mock"   # always uses mock regardless of what user clicks
+```
+
+**Let the user choose in the UI (recommended for local dev):**
+```env
+GENERATOR_STRATEGY=          # leave blank — toggle button in the form will be enabled
+```
+
 **To get a Suno API Key:**
 1. Visit [https://sunoapi.org/](https://sunoapi.org/) and sign up.
 2. Copy your API key from the dashboard.
@@ -120,27 +147,40 @@ This project supports two song generation strategies:
    GENERATOR_STRATEGY="suno"
    ```
 
-For local testing without a Suno account, just use:
+For local testing without a Suno account:
 ```env
 GENERATOR_STRATEGY="mock"
 ```
 
 ### 🧠 Using the Strategy Pattern in Code
 
-As part of the **Strategy Pattern** implementation, the application dynamically selects how to generate songs via the `SongGenerationContext`. You can choose the strategy in two ways:
+The application dynamically selects how to generate songs via `SongGenerationContext`. The resolution order is:
 
-1. **Global Config (`.env` variable):** Change the `GENERATOR_STRATEGY` (historically referred to as `STRAT_CHOSEN`) in your `.env` file to either `mock` or `suno`. This will act as the default strategy if one isn't explicitly provided.
-   
-2. **Explicit Selection in Views:** You can easily bypass the `.env` variable by passing the explicit strategy name directly inside the views. This ensures that specific views always use their designated generator, completely bypassing the `.env` default.
-   ```python
-   # In CreatePromptMockupView.py
-   context = SongGenerationContext("mock")  # Forces the mock strategy
-   return context.execute(request)
+1. **`.env` takes priority** — if `GENERATOR_STRATEGY` is set to `"mock"` or `"suno"`, that strategy is always used no matter what.
+2. **User's choice (view arg) is the fallback** — if `.env` is blank or contains an unrecognised value, the strategy passed by the view is used instead.
+3. **Default** — if both are absent, falls back to `"mock"`.
 
-   # In CreateGenerateSongView.py
-   context = SongGenerationContext("suno")  # Forces the Suno strategy
-   return context.execute(request)
-   ```
+```python
+# Context.py — resolution logic
+env_strategy = os.getenv("GENERATOR_STRATEGY", "").strip().lower()
+chosen = (env_strategy if env_strategy in {"mock", "suno"} else (user_choice or "mock"))
+```
+
+The views pass their intended strategy as the fallback:
+```python
+# CreateGenerateSongView.py  — user's intended choice is "suno"
+context = SongGenerationContext("suno")
+
+# CreatePromptMockupView.py  — user's intended choice is "mock"
+context = SongGenerationContext("mock")
+```
+
+To inspect which strategy and lock-state are active (used to drive the UI):
+```python
+strategy, is_forced = SongGenerationContext.resolve("suno")
+# strategy  → "mock" or "suno"
+# is_forced → True if .env is controlling it, False if user can switch
+```
 
 ---
 
@@ -388,24 +428,31 @@ sequenceDiagram
     participant Env as .env
     participant Strategy as Strategy (Mock/Suno)
     participant API as Database / Suno API
-    
+
     User->>View: POST /generate (form data)
-    View->>Context: init SongGenerationContext()
+    View->>Context: init SongGenerationContext(user_choice)
     Context->>Env: Read GENERATOR_STRATEGY
-    Env-->>Context: "mock" or "suno"
-    
-    alt is "suno"
+
+    alt GENERATOR_STRATEGY is "mock" or "suno" (locked)
+        Env-->>Context: forced strategy value
+        Context->>Context: use env strategy (ignore user_choice)
+    else GENERATOR_STRATEGY is blank or invalid
+        Env-->>Context: empty / unrecognised
+        Context->>Context: use user_choice from view
+    end
+
+    alt resolved strategy is "suno"
         Context->>Context: set strategy = SunoSongGeneratorStrategy()
-    else is "mock"
+    else resolved strategy is "mock"
         Context->>Context: set strategy = MockSongGeneratorStrategy()
     end
-    
+
     View->>Context: execute(request)
     Context->>Strategy: generate(request)
-    
+
     Strategy->>API: Process request (Call API / Save DB)
     API-->>Strategy: Return result / Task ID
-    
+
     Strategy-->>Context: HttpResponseRedirect
     Context-->>View: HttpResponseRedirect
     View-->>User: Redirect to generate page / library

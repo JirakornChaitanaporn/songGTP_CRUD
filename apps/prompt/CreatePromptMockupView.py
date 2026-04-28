@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import CreateView
 
 from apps.prompt.Context import SongGenerationContext
@@ -14,7 +14,14 @@ class CreatePromptMockupView(CreateView):
     """
 
     def get(self, request):
-        return render(request, "prompt/generate_song.html")
+        strategy, forced = SongGenerationContext.resolve("mock")
+        # If .env locks a different strategy, redirect to the correct view
+        if forced and strategy != "mock":
+            return redirect("generate_song")
+        return render(request, "prompt/generate_song.html", {
+            "current_strategy": strategy,
+            "strategy_forced": forced,
+        })
 
     def post(self, request):
         # Always force MOCK strategy — no matter what .env says

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View
 
 from apps.prompt.Context import SongGenerationContext
@@ -14,7 +14,14 @@ class CreateGenerateSongView(View):
     """
 
     def get(self, request):
-        return render(request, "prompt/generate_song.html")
+        strategy, forced = SongGenerationContext.resolve("suno")
+        # If .env locks a different strategy, redirect to the correct view
+        if forced and strategy != "suno":
+            return redirect("create_prompt_mockup")
+        return render(request, "prompt/generate_song.html", {
+            "current_strategy": strategy,
+            "strategy_forced": forced,
+        })
 
     def post(self, request):
         # Always force SUNO strategy — calls the real Suno API

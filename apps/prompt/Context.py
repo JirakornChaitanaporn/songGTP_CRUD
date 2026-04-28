@@ -5,25 +5,18 @@ from apps.prompt.SunoSongGeneratorStrategy import SunoSongGeneratorStrategy
 
 
 class SongGenerationContext:
-    """
-    Context class for the Strategy Pattern.
-
-    Accepts an explicit strategy name ("mock" or "suno").
-    If no name is passed, falls back to reading GENERATOR_STRATEGY from .env.
-
-    Usage in a view (explicit — recommended):
-        context = SongGenerationContext("mock")
-        context = SongGenerationContext("suno")
-        return context.execute(request)
-
-    Usage with .env fallback:
-        context = SongGenerationContext()
-        return context.execute(request)
-    """
+    @classmethod
+    def resolve(cls, user_choice: str) -> tuple:
+        """Returns (strategy_name, is_env_forced) for passing context to templates."""
+        env_strategy = os.getenv("GENERATOR_STRATEGY", "").strip().lower()
+        if env_strategy in {"mock", "suno"}:
+            return env_strategy, True
+        return (user_choice or "mock").lower(), False
 
     def __init__(self, strategy: str = None):
-        # Use the explicitly passed strategy name, or fall back to .env
-        chosen = (strategy or os.getenv("GENERATOR_STRATEGY", "mock")).lower()
+        # .env takes priority; fall back to the caller's choice when .env is blank
+        env_strategy = os.getenv("GENERATOR_STRATEGY", "").strip()
+        chosen = (env_strategy if env_strategy else (strategy or "mock")).lower()
 
         if chosen == "suno":
             self._strategy = SunoSongGeneratorStrategy()
